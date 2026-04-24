@@ -1,0 +1,16 @@
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\Debug\netcoreapp3.1\Windows Forms core chat.exe
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\Debug\netcoreapp3.1\Windows Forms core chat.deps.json
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\Debug\netcoreapp3.1\Windows Forms core chat.runtimeconfig.json
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\Debug\netcoreapp3.1\Windows Forms core chat.runtimeconfig.dev.json
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\Debug\netcoreapp3.1\Windows Forms core chat.dll
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\Debug\netcoreapp3.1\Windows Forms core chat.pdb
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows_Forms_Chat.Form1.resources
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.csproj.GenerateResource.cache
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.AssemblyInfoInputs.cache
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.AssemblyInfo.cs
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.csproj.CoreCompileInputs.cache
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.sourcelink.json
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.dll
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.pdb
+C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\netcoreapp3.1\Windows Forms core chat.genruntimeconfig.cache

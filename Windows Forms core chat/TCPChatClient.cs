@@ -19,7 +19,7 @@ namespace Windows_Forms_Chat
         public string serverIP;
 
 
-        public static TCPChatClient CreateInstance(int port, int serverPort, string serverIP, TextBox chatTextBox)
+        public static TCPChatClient CreateInstance(int port, int serverPort, string serverIP, RichTextBox chatTextBox)
         {
             TCPChatClient tcp = null;
             //if port values are valid and ip worth attempting to join
@@ -44,6 +44,7 @@ namespace Windows_Forms_Chat
         {
             int attempts = 0;
 
+            // jess code - while not connected attempt to connect
             while (!socket.Connected)
             {
                 try
@@ -65,12 +66,35 @@ namespace Windows_Forms_Chat
             clientSocket.socket.BeginReceive(clientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, clientSocket);
         }
 
+        //public void SendString(string text)
+        //{
+        //    byte[] buffer = Encoding.ASCII.GetBytes(text);
+        //    socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+        //}
+
         public void SendString(string text)
         {
-            byte[] buffer = Encoding.ASCII.GetBytes(text);
-            socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-        }
+            try
+            {
+                // Do not send if socket is closed or disconnected
+                if (socket == null || !socket.Connected)
+                {
+                    AddToChat("You are disconnected and cannot send messages.");
+                    return;
+                }
 
+                byte[] buffer = Encoding.ASCII.GetBytes(text);
+                socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
+            }
+            catch (ObjectDisposedException)
+            {
+                AddToChat("You are disconnected and cannot send messages.");
+            }
+            catch (SocketException)
+            {
+                AddToChat("Connection lost. You cannot send messages.");
+            }
+        }
 
         public void ReceiveCallback(IAsyncResult AR)
         {
@@ -98,9 +122,16 @@ namespace Windows_Forms_Chat
 
             //text is from server but could have been broadcast from the other clients
             AddToChat( text );
-            
+
+            if (text.Contains("You have been kicked"))
+            {
+                socket.Close();
+                return;
+            }
+
             //we just received a message from this socket, better keep an ear out with another thread for the next one
             currentClientSocket.socket.BeginReceive(currentClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, currentClientSocket);
+        
         }
         public void Close()
         {

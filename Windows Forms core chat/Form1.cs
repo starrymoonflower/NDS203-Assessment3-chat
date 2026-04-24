@@ -26,7 +26,7 @@ namespace Windows_Forms_Chat
             InitializeComponent();
 
         }
-        
+
         public bool CanHostOrJoin()
         {
             if (server == null && client == null)
@@ -53,7 +53,7 @@ namespace Windows_Forms_Chat
                 }
                 catch (Exception ex)
                 {
-                    ChatTextBox.Text += "Error: " + ex ;
+                    ChatTextBox.Text += "Error: " + ex;
                     ChatTextBox.AppendText(Environment.NewLine);
                 }
             }
@@ -75,6 +75,45 @@ namespace Windows_Forms_Chat
 
                     client.ConnectToServer();
 
+                    // Get username from textbox and remove spaces at start/end
+                    string username = usernameTextbox.Text.Trim();
+
+                    // Check if user entered something
+                    if (username == "")
+                    {
+                        MessageBox.Show("Please enter a username");
+                        return;
+                    }
+                    // validate username
+                    // if (username == "") ..continue this bit 
+                    // Check if user entered something
+
+
+                    // OPTIONAL (HD level): check username length
+                    if (username.Length < 3)
+                    {
+                        MessageBox.Show("Username must be at least 3 characters");
+                        return;
+                    }
+
+                    // OPTIONAL (HD level): prevent spaces in username
+                    if (username.Contains(" "))
+                    {
+                        MessageBox.Show("Username cannot contain spaces");
+                        return;
+                    }
+
+                    // OPTIONAL (HD level): allow only letters and numbers
+                    if (!username.All(char.IsLetterOrDigit))
+                    {
+                        MessageBox.Show("Username must contain only letters and numbers");
+                        return;
+                    }
+
+                    // Send username to server
+                    client.SendString("!username " + username);
+
+                    this.Text = $"Client: {username}";
                 }
                 catch (Exception ex)
                 {
@@ -82,16 +121,44 @@ namespace Windows_Forms_Chat
                     ChatTextBox.Text += "Error: " + ex;
                     ChatTextBox.AppendText(Environment.NewLine);
                 }
-            
+
             }
         }
 
         private void SendButton_Click(object sender, EventArgs e)
         {
-            if (client != null)
+            /*if (client != null)
                 client.SendString(TypeTextBox.Text);
             else if (server != null)
                 server.SendToAll(TypeTextBox.Text, null);
+            */
+
+            // Get message from textbox
+            string message = TypeTextBox.Text.Trim();
+
+            // Don't send empty messages
+            if (message == "")
+                return;
+
+            // Send message
+            if (client != null)
+                client.SendString(message);
+            else if (server != null)
+            {
+                if (server.LocalCommand(TypeTextBox.Text) == false)
+                    server.SendToAll("Server: " + message, null);
+            }
+                 
+
+                
+
+            // 🧹 Clear the textbox after sending
+            TypeTextBox.Clear();
+
+            // Optional: keep cursor ready for typing
+            TypeTextBox.Focus();
+
+
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -184,6 +251,24 @@ namespace Windows_Forms_Chat
         private void button9_Click(object sender, EventArgs e)
         {
             AttemptMove(8);
+        }
+
+        private void ChatTextBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void TypeTextBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            // If user presses Enter
+            if (e.KeyCode == Keys.Enter)
+            {
+                // Prevent "ding" sound or newline
+                e.SuppressKeyPress = true;
+
+                // Trigger send button logic
+                SendButton.PerformClick();
+            }
         }
     }
 }

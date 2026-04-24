@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Windows_Forms_Chat
@@ -8,7 +9,7 @@ namespace Windows_Forms_Chat
 
     public class TCPChatBase
     {
-        public TextBox chatTextBox;
+        public RichTextBox chatTextBox;
         public int port;
         public void SetChat(string str)
         {
@@ -23,9 +24,17 @@ namespace Windows_Forms_Chat
             //dumb https://iandotnet.wordpress.com/tag/multithreading-how-to-update-textbox-on-gui-from-another-thread/
             chatTextBox.Invoke((Action)delegate
             {
+
+                chatTextBox.SelectionColor = Color.Black;
                 chatTextBox.AppendText(str);
                 chatTextBox.AppendText(Environment.NewLine);
+
             });
+
         }
+
+        public Action FlashAction;
+
+
     }
 }

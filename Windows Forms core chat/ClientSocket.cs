@@ -8,8 +8,13 @@ namespace Windows_Forms_Chat
     public class ClientSocket
     {
         //add other attributes to this, e.g username, what state the client is in etc
+
+        //Jess code - fetch username use to refer in our code to that textbox 
+        public bool moderator;
+        public string username;
         public Socket socket;
         public const int BUFFER_SIZE = 2048;
         public byte[] buffer = new byte[BUFFER_SIZE];
     }
 }
+ 

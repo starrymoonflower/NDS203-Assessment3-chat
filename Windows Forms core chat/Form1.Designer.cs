@@ -28,277 +28,317 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.label1 = new System.Windows.Forms.Label();
-            this.MyPortTextBox = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.serverPortTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.ServerIPTextBox = new System.Windows.Forms.TextBox();
-            this.ChatTextBox = new System.Windows.Forms.TextBox();
-            this.TypeTextBox = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.HostButton = new System.Windows.Forms.Button();
-            this.JoinButton = new System.Windows.Forms.Button();
-            this.SendButton = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
-            this.button7 = new System.Windows.Forms.Button();
-            this.button8 = new System.Windows.Forms.Button();
-            this.button9 = new System.Windows.Forms.Button();
-            this.SuspendLayout();
+            label1 = new System.Windows.Forms.Label();
+            MyPortTextBox = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
+            serverPortTextBox = new System.Windows.Forms.TextBox();
+            label3 = new System.Windows.Forms.Label();
+            ServerIPTextBox = new System.Windows.Forms.TextBox();
+            ChatTextBox = new System.Windows.Forms.RichTextBox();
+            TypeTextBox = new System.Windows.Forms.TextBox();
+            label4 = new System.Windows.Forms.Label();
+            HostButton = new System.Windows.Forms.Button();
+            JoinButton = new System.Windows.Forms.Button();
+            SendButton = new System.Windows.Forms.Button();
+            label5 = new System.Windows.Forms.Label();
+            button1 = new System.Windows.Forms.Button();
+            button2 = new System.Windows.Forms.Button();
+            button3 = new System.Windows.Forms.Button();
+            button4 = new System.Windows.Forms.Button();
+            button5 = new System.Windows.Forms.Button();
+            button6 = new System.Windows.Forms.Button();
+            button7 = new System.Windows.Forms.Button();
+            button8 = new System.Windows.Forms.Button();
+            button9 = new System.Windows.Forms.Button();
+            usernameTextbox = new System.Windows.Forms.RichTextBox();
+            label6 = new System.Windows.Forms.Label();
+            SuspendLayout();
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 13);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(59, 20);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "My Port";
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(11, 10);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(49, 15);
+            label1.TabIndex = 0;
+            label1.Text = "My Port";
             // 
             // MyPortTextBox
             // 
-            this.MyPortTextBox.Location = new System.Drawing.Point(13, 37);
-            this.MyPortTextBox.Name = "MyPortTextBox";
-            this.MyPortTextBox.Size = new System.Drawing.Size(125, 27);
-            this.MyPortTextBox.TabIndex = 1;
-            this.MyPortTextBox.Text = "6666";
+            MyPortTextBox.Location = new System.Drawing.Point(11, 28);
+            MyPortTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            MyPortTextBox.Name = "MyPortTextBox";
+            MyPortTextBox.Size = new System.Drawing.Size(110, 23);
+            MyPortTextBox.TabIndex = 1;
+            MyPortTextBox.Text = "6666";
             // 
             // label2
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(251, 13);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(80, 20);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "Server Port";
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(220, 10);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(64, 15);
+            label2.TabIndex = 2;
+            label2.Text = "Server Port";
             // 
             // serverPortTextBox
             // 
-            this.serverPortTextBox.Location = new System.Drawing.Point(251, 37);
-            this.serverPortTextBox.Name = "serverPortTextBox";
-            this.serverPortTextBox.Size = new System.Drawing.Size(125, 27);
-            this.serverPortTextBox.TabIndex = 3;
-            this.serverPortTextBox.Text = "6666";
+            serverPortTextBox.Location = new System.Drawing.Point(220, 28);
+            serverPortTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            serverPortTextBox.Name = "serverPortTextBox";
+            serverPortTextBox.Size = new System.Drawing.Size(110, 23);
+            serverPortTextBox.TabIndex = 3;
+            serverPortTextBox.Text = "6666";
             // 
             // label3
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(423, 13);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(64, 20);
-            this.label3.TabIndex = 4;
-            this.label3.Text = "server IP";
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(370, 10);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(51, 15);
+            label3.TabIndex = 4;
+            label3.Text = "server IP";
             // 
             // ServerIPTextBox
             // 
-            this.ServerIPTextBox.Location = new System.Drawing.Point(423, 37);
-            this.ServerIPTextBox.Name = "ServerIPTextBox";
-            this.ServerIPTextBox.Size = new System.Drawing.Size(159, 27);
-            this.ServerIPTextBox.TabIndex = 5;
-            this.ServerIPTextBox.Text = "127.0.0.1";
+            ServerIPTextBox.Location = new System.Drawing.Point(370, 28);
+            ServerIPTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            ServerIPTextBox.Name = "ServerIPTextBox";
+            ServerIPTextBox.Size = new System.Drawing.Size(140, 23);
+            ServerIPTextBox.TabIndex = 5;
+            ServerIPTextBox.Text = "127.0.0.1";
             // 
             // ChatTextBox
             // 
-            this.ChatTextBox.Location = new System.Drawing.Point(12, 167);
-            this.ChatTextBox.Multiline = true;
-            this.ChatTextBox.Name = "ChatTextBox";
-            this.ChatTextBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ChatTextBox.Size = new System.Drawing.Size(605, 205);
-            this.ChatTextBox.TabIndex = 6;
-            this.ChatTextBox.Text = "\r\n";
+            ChatTextBox.Location = new System.Drawing.Point(12, 121);
+            ChatTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            ChatTextBox.Multiline = true;
+            ChatTextBox.Name = "ChatTextBox";
+            ChatTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            ChatTextBox.Size = new System.Drawing.Size(530, 155);
+            ChatTextBox.TabIndex = 6;
+            ChatTextBox.TextChanged += ChatTextBox_TextChanged;
             // 
             // TypeTextBox
             // 
-            this.TypeTextBox.Location = new System.Drawing.Point(60, 390);
-            this.TypeTextBox.Name = "TypeTextBox";
-            this.TypeTextBox.Size = new System.Drawing.Size(448, 27);
-            this.TypeTextBox.TabIndex = 7;
+            TypeTextBox.Location = new System.Drawing.Point(52, 292);
+            TypeTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            TypeTextBox.Name = "TypeTextBox";
+            TypeTextBox.Size = new System.Drawing.Size(392, 23);
+            TypeTextBox.TabIndex = 7;
+            TypeTextBox.KeyDown += TypeTextBox_KeyDown;
             // 
             // label4
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 390);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 20);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Chat:";
+            label4.AutoSize = true;
+            label4.Location = new System.Drawing.Point(10, 292);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(35, 15);
+            label4.TabIndex = 8;
+            label4.Text = "Chat:";
             // 
             // HostButton
             // 
-            this.HostButton.Location = new System.Drawing.Point(13, 91);
-            this.HostButton.Name = "HostButton";
-            this.HostButton.Size = new System.Drawing.Size(94, 29);
-            this.HostButton.TabIndex = 9;
-            this.HostButton.Text = "Host Server";
-            this.HostButton.UseVisualStyleBackColor = true;
-            this.HostButton.Click += new System.EventHandler(this.HostButton_Click);
+            HostButton.Location = new System.Drawing.Point(11, 68);
+            HostButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            HostButton.Name = "HostButton";
+            HostButton.Size = new System.Drawing.Size(82, 22);
+            HostButton.TabIndex = 9;
+            HostButton.Text = "Host Server";
+            HostButton.UseVisualStyleBackColor = true;
+            HostButton.Click += HostButton_Click;
             // 
             // JoinButton
             // 
-            this.JoinButton.Location = new System.Drawing.Point(251, 91);
-            this.JoinButton.Name = "JoinButton";
-            this.JoinButton.Size = new System.Drawing.Size(94, 29);
-            this.JoinButton.TabIndex = 10;
-            this.JoinButton.Text = "Join Server";
-            this.JoinButton.UseVisualStyleBackColor = true;
-            this.JoinButton.Click += new System.EventHandler(this.JoinButton_Click);
+            JoinButton.Location = new System.Drawing.Point(220, 68);
+            JoinButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            JoinButton.Name = "JoinButton";
+            JoinButton.Size = new System.Drawing.Size(82, 22);
+            JoinButton.TabIndex = 10;
+            JoinButton.Text = "Join Server";
+            JoinButton.UseVisualStyleBackColor = true;
+            JoinButton.Click += JoinButton_Click;
             // 
             // SendButton
             // 
-            this.SendButton.Location = new System.Drawing.Point(523, 390);
-            this.SendButton.Name = "SendButton";
-            this.SendButton.Size = new System.Drawing.Size(94, 29);
-            this.SendButton.TabIndex = 11;
-            this.SendButton.Text = "Send";
-            this.SendButton.UseVisualStyleBackColor = true;
-            this.SendButton.Click += new System.EventHandler(this.SendButton_Click);
+            SendButton.Location = new System.Drawing.Point(460, 292);
+            SendButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            SendButton.Name = "SendButton";
+            SendButton.Size = new System.Drawing.Size(82, 22);
+            SendButton.TabIndex = 11;
+            SendButton.Text = "Send";
+            SendButton.UseVisualStyleBackColor = true;
+            SendButton.Click += SendButton_Click;
             // 
             // label5
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(173, 34);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(29, 20);
-            this.label5.TabIndex = 12;
-            this.label5.Text = "OR";
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(151, 26);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(23, 15);
+            label5.TabIndex = 12;
+            label5.Text = "OR";
             // 
             // button1
             // 
-            this.button1.BackColor = System.Drawing.Color.Violet;
-            this.button1.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button1.Location = new System.Drawing.Point(731, 34);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(94, 98);
-            this.button1.TabIndex = 13;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.BackColor = System.Drawing.Color.Violet;
+            button1.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button1.Location = new System.Drawing.Point(640, 26);
+            button1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(82, 74);
+            button1.TabIndex = 13;
+            button1.UseVisualStyleBackColor = false;
+            button1.Click += button1_Click;
             // 
             // button2
             // 
-            this.button2.BackColor = System.Drawing.Color.Violet;
-            this.button2.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button2.Location = new System.Drawing.Point(831, 34);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(94, 98);
-            this.button2.TabIndex = 13;
-            this.button2.UseVisualStyleBackColor = false;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
+            button2.BackColor = System.Drawing.Color.Violet;
+            button2.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button2.Location = new System.Drawing.Point(727, 26);
+            button2.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button2.Name = "button2";
+            button2.Size = new System.Drawing.Size(82, 74);
+            button2.TabIndex = 13;
+            button2.UseVisualStyleBackColor = false;
+            button2.Click += button2_Click;
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.Color.Violet;
-            this.button3.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button3.Location = new System.Drawing.Point(931, 34);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(94, 98);
-            this.button3.TabIndex = 13;
-            this.button3.UseVisualStyleBackColor = false;
-            this.button3.Click += new System.EventHandler(this.button3_Click);
+            button3.BackColor = System.Drawing.Color.Violet;
+            button3.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button3.Location = new System.Drawing.Point(815, 26);
+            button3.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button3.Name = "button3";
+            button3.Size = new System.Drawing.Size(82, 74);
+            button3.TabIndex = 13;
+            button3.UseVisualStyleBackColor = false;
+            button3.Click += button3_Click;
             // 
             // button4
             // 
-            this.button4.BackColor = System.Drawing.Color.Violet;
-            this.button4.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button4.Location = new System.Drawing.Point(731, 138);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(94, 98);
-            this.button4.TabIndex = 13;
-            this.button4.UseVisualStyleBackColor = false;
-            this.button4.Click += new System.EventHandler(this.button4_Click);
+            button4.BackColor = System.Drawing.Color.Violet;
+            button4.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button4.Location = new System.Drawing.Point(640, 104);
+            button4.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button4.Name = "button4";
+            button4.Size = new System.Drawing.Size(82, 74);
+            button4.TabIndex = 13;
+            button4.UseVisualStyleBackColor = false;
+            button4.Click += button4_Click;
             // 
             // button5
             // 
-            this.button5.BackColor = System.Drawing.Color.Violet;
-            this.button5.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button5.Location = new System.Drawing.Point(831, 138);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(94, 98);
-            this.button5.TabIndex = 13;
-            this.button5.UseVisualStyleBackColor = false;
-            this.button5.Click += new System.EventHandler(this.button5_Click);
+            button5.BackColor = System.Drawing.Color.Violet;
+            button5.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button5.Location = new System.Drawing.Point(727, 104);
+            button5.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button5.Name = "button5";
+            button5.Size = new System.Drawing.Size(82, 74);
+            button5.TabIndex = 13;
+            button5.UseVisualStyleBackColor = false;
+            button5.Click += button5_Click;
             // 
             // button6
             // 
-            this.button6.BackColor = System.Drawing.Color.Violet;
-            this.button6.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button6.Location = new System.Drawing.Point(931, 138);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(94, 98);
-            this.button6.TabIndex = 13;
-            this.button6.UseVisualStyleBackColor = false;
-            this.button6.Click += new System.EventHandler(this.button6_Click);
+            button6.BackColor = System.Drawing.Color.Violet;
+            button6.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button6.Location = new System.Drawing.Point(815, 104);
+            button6.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button6.Name = "button6";
+            button6.Size = new System.Drawing.Size(82, 74);
+            button6.TabIndex = 13;
+            button6.UseVisualStyleBackColor = false;
+            button6.Click += button6_Click;
             // 
             // button7
             // 
-            this.button7.BackColor = System.Drawing.Color.Violet;
-            this.button7.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button7.Location = new System.Drawing.Point(731, 242);
-            this.button7.Name = "button7";
-            this.button7.Size = new System.Drawing.Size(94, 98);
-            this.button7.TabIndex = 13;
-            this.button7.UseVisualStyleBackColor = false;
-            this.button7.Click += new System.EventHandler(this.button7_Click);
+            button7.BackColor = System.Drawing.Color.Violet;
+            button7.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button7.Location = new System.Drawing.Point(640, 182);
+            button7.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button7.Name = "button7";
+            button7.Size = new System.Drawing.Size(82, 74);
+            button7.TabIndex = 13;
+            button7.UseVisualStyleBackColor = false;
+            button7.Click += button7_Click;
             // 
             // button8
             // 
-            this.button8.BackColor = System.Drawing.Color.Violet;
-            this.button8.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button8.Location = new System.Drawing.Point(831, 242);
-            this.button8.Name = "button8";
-            this.button8.Size = new System.Drawing.Size(94, 98);
-            this.button8.TabIndex = 13;
-            this.button8.UseVisualStyleBackColor = false;
-            this.button8.Click += new System.EventHandler(this.button8_Click);
+            button8.BackColor = System.Drawing.Color.Violet;
+            button8.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button8.Location = new System.Drawing.Point(727, 182);
+            button8.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button8.Name = "button8";
+            button8.Size = new System.Drawing.Size(82, 74);
+            button8.TabIndex = 13;
+            button8.UseVisualStyleBackColor = false;
+            button8.Click += button8_Click;
             // 
             // button9
             // 
-            this.button9.BackColor = System.Drawing.Color.Violet;
-            this.button9.Font = new System.Drawing.Font("Segoe UI", 19F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.button9.Location = new System.Drawing.Point(931, 242);
-            this.button9.Name = "button9";
-            this.button9.Size = new System.Drawing.Size(94, 98);
-            this.button9.TabIndex = 13;
-            this.button9.UseVisualStyleBackColor = false;
-            this.button9.Click += new System.EventHandler(this.button9_Click);
+            button9.BackColor = System.Drawing.Color.Violet;
+            button9.Font = new System.Drawing.Font("Segoe UI", 19F);
+            button9.Location = new System.Drawing.Point(815, 182);
+            button9.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            button9.Name = "button9";
+            button9.Size = new System.Drawing.Size(82, 74);
+            button9.TabIndex = 13;
+            button9.UseVisualStyleBackColor = false;
+            button9.Click += button9_Click;
+            // 
+            // usernameTextbox
+            // 
+            usernameTextbox.Location = new System.Drawing.Point(370, 69);
+            usernameTextbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            usernameTextbox.Name = "usernameTextbox";
+            usernameTextbox.Size = new System.Drawing.Size(140, 23);
+            usernameTextbox.TabIndex = 14;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new System.Drawing.Point(370, 53);
+            label6.Name = "label6";
+            label6.Size = new System.Drawing.Size(60, 15);
+            label6.TabIndex = 15;
+            label6.Text = "Username";
             // 
             // Form1
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1153, 478);
-            this.Controls.Add(this.button9);
-            this.Controls.Add(this.button8);
-            this.Controls.Add(this.button7);
-            this.Controls.Add(this.button6);
-            this.Controls.Add(this.button5);
-            this.Controls.Add(this.button4);
-            this.Controls.Add(this.button3);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.label5);
-            this.Controls.Add(this.SendButton);
-            this.Controls.Add(this.JoinButton);
-            this.Controls.Add(this.HostButton);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.TypeTextBox);
-            this.Controls.Add(this.ChatTextBox);
-            this.Controls.Add(this.ServerIPTextBox);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.serverPortTextBox);
-            this.Controls.Add(this.label2);
-            this.Controls.Add(this.MyPortTextBox);
-            this.Controls.Add(this.label1);
-            this.Name = "Form1";
-            this.Text = "Form1";
-            this.Load += new System.EventHandler(this.Form1_Load);
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            ClientSize = new System.Drawing.Size(1009, 358);
+            Controls.Add(label6);
+            Controls.Add(usernameTextbox);
+            Controls.Add(button9);
+            Controls.Add(button8);
+            Controls.Add(button7);
+            Controls.Add(button6);
+            Controls.Add(button5);
+            Controls.Add(button4);
+            Controls.Add(button3);
+            Controls.Add(button2);
+            Controls.Add(button1);
+            Controls.Add(label5);
+            Controls.Add(SendButton);
+            Controls.Add(JoinButton);
+            Controls.Add(HostButton);
+            Controls.Add(label4);
+            Controls.Add(TypeTextBox);
+            Controls.Add(ChatTextBox);
+            Controls.Add(ServerIPTextBox);
+            Controls.Add(label3);
+            Controls.Add(serverPortTextBox);
+            Controls.Add(label2);
+            Controls.Add(MyPortTextBox);
+            Controls.Add(label1);
+            Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            Name = "Form1";
+            Text = "Form1";
+            Load += Form1_Load;
+            ResumeLayout(false);
+            PerformLayout();
 
         }
 
@@ -310,7 +350,7 @@
         private System.Windows.Forms.TextBox serverPortTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox ServerIPTextBox;
-        private System.Windows.Forms.TextBox ChatTextBox;
+        private System.Windows.Forms.RichTextBox ChatTextBox;
         private System.Windows.Forms.TextBox TypeTextBox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button HostButton;
@@ -326,6 +366,8 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.RichTextBox usernameTextbox;
+        private System.Windows.Forms.Label label6;
     }
 }
 
