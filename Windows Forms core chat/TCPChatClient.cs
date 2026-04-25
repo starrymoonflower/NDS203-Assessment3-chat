@@ -44,7 +44,7 @@ namespace Windows_Forms_Chat
         {
             int attempts = 0;
 
-            // jess code - while not connected attempt to connect
+            // while not connected attempt to connect
             while (!socket.Connected)
             {
                 try
@@ -65,12 +65,6 @@ namespace Windows_Forms_Chat
             //keep open thread for receiving data
             clientSocket.socket.BeginReceive(clientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, clientSocket);
         }
-
-        //public void SendString(string text)
-        //{
-        //    byte[] buffer = Encoding.ASCII.GetBytes(text);
-        //    socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
-        //}
 
         public void SendString(string text)
         {
@@ -116,6 +110,7 @@ namespace Windows_Forms_Chat
             //read bytes from packet
             byte[] recBuf = new byte[received];
             Array.Copy(currentClientSocket.buffer, recBuf, received);
+            
             //convert to string so we can work with it
             string text = Encoding.ASCII.GetString(recBuf);
             Console.WriteLine("Received Text: " + text);

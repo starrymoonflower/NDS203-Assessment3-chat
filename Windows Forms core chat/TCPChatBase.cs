@@ -24,17 +24,11 @@ namespace Windows_Forms_Chat
             //dumb https://iandotnet.wordpress.com/tag/multithreading-how-to-update-textbox-on-gui-from-another-thread/
             chatTextBox.Invoke((Action)delegate
             {
-
                 chatTextBox.SelectionColor = Color.Black;
                 chatTextBox.AppendText(str);
                 chatTextBox.AppendText(Environment.NewLine);
-
             });
 
         }
-
-        public Action FlashAction;
-
-
     }
 }

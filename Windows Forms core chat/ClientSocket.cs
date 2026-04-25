@@ -4,12 +4,14 @@ using System.Net.Sockets;
 using System.Text;
 
 namespace Windows_Forms_Chat
-{
+{   
+    // Represents a single connected client on the server side 
+    // Stores info about the client - socket connection, username, moderator status
+    // and data buffer for receiving messages. 
     public class ClientSocket
     {
         //add other attributes to this, e.g username, what state the client is in etc
 
-        //Jess code - fetch username use to refer in our code to that textbox 
         public bool moderator;
         public string username;
         public Socket socket;

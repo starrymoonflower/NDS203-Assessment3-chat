@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
 //https://www.youtube.com/watch?v=xgLRe7QV6QI&ab_channel=HazardEditHazardEdit
@@ -35,84 +36,115 @@ namespace Windows_Forms_Chat
                 return false;
         }
 
+        // METHOD: HOST / START SERVER
+        // This runs when the user clicks the "Host" button
         private void HostButton_Click(object sender, EventArgs e)
-        {
+        {   
+            // Only allow hosting if not already hosting or connected as a client
             if (CanHostOrJoin())
             {
                 try
                 {
+                    // Read the port number entered by the user 
                     int port = int.Parse(MyPortTextBox.Text);
+                    
+                    // Create a new server instance using the port and chat display box
                     server = TCPChatServer.createInstance(port, ChatTextBox);
-                    //oh no, errors
+
+                    // If server failed to create (invalid port etc), throw an error
                     if (server == null)
-                        throw new Exception("Incorrect port value!");//thrown exceptions should exit the try and land in next catch
+                        //thrown exceptions should exit the try and land in next catch
+                        throw new Exception("Incorrect port value!");
 
+                    // Set server name from textbox (e.g Bob)
+                    string name = usernameTextbox.Text.Trim();
+
+                    // If empty, default to "Server", Otherwise use the entered name
+                    server.serverName = name == "" ? "Server" : name;
+
+                    // Set window title for server
+                    this.Text = "[Server - " + server.serverName + "]";
+
+                    // Start the server (begin listening for client connections)
                     server.SetupServer();
-
-
                 }
                 catch (Exception ex)
                 {
+                    // If anything goes wrong, display error in chat box
                     ChatTextBox.Text += "Error: " + ex;
+
+                    // Move to new line for readability
                     ChatTextBox.AppendText(Environment.NewLine);
                 }
             }
 
         }
 
+        // METHOD: CLIENT JOINS THE CHAT SERVER
         private void JoinButton_Click(object sender, EventArgs e)
         {
             if (CanHostOrJoin())
             {
                 try
-                {
-                    int port = int.Parse(MyPortTextBox.Text);
-                    int serverPort = int.Parse(serverPortTextBox.Text);
-                    client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox);
-
-                    if (client == null)
-                        throw new Exception("Incorrect port value!");//thrown exceptions should exit the try and land in next catch
-
-                    client.ConnectToServer();
-
-                    // Get username from textbox and remove spaces at start/end
+                { 
+                    // Get username from textbox first before connecting
+                    // and remove spaces at start/end
                     string username = usernameTextbox.Text.Trim();
 
-                    // Check if user entered something
+                    // Validate username
                     if (username == "")
                     {
                         MessageBox.Show("Please enter a username");
                         return;
                     }
-                    // validate username
-                    // if (username == "") ..continue this bit 
-                    // Check if user entered something
-
-
-                    // OPTIONAL (HD level): check username length
+                   
+                    // Check username length
                     if (username.Length < 3)
                     {
                         MessageBox.Show("Username must be at least 3 characters");
                         return;
                     }
 
-                    // OPTIONAL (HD level): prevent spaces in username
+                    // Prevent spaces in username
                     if (username.Contains(" "))
                     {
                         MessageBox.Show("Username cannot contain spaces");
                         return;
                     }
 
-                    // OPTIONAL (HD level): allow only letters and numbers
+                    // Allow only letters and numbers
                     if (!username.All(char.IsLetterOrDigit))
                     {
                         MessageBox.Show("Username must contain only letters and numbers");
                         return;
                     }
 
+                    // Prevent clients using reserved system/server names
+                    if (username.Equals("server", StringComparison.OrdinalIgnoreCase) ||
+                        username.Equals("admin", StringComparison.OrdinalIgnoreCase) ||
+                        username.Equals("moderator", StringComparison.OrdinalIgnoreCase) ||
+                        username.Equals("mod", StringComparison.OrdinalIgnoreCase) ||
+                        username.Equals("system", StringComparison.OrdinalIgnoreCase))
+                    {
+                        MessageBox.Show("This username is reserved.");
+                        return;
+                    }
+
+                    // Read port numbers and create client only after username is valid
+                    int port = int.Parse(MyPortTextBox.Text);
+                    int serverPort = int.Parse(serverPortTextBox.Text);
+                    
+                    client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox);
+
+                    if (client == null)
+                        throw new Exception("Incorrect port value!");
+
+                    client.ConnectToServer();
+
                     // Send username to server
                     client.SendString("!username " + username);
 
+                    // Show username in the window title
                     this.Text = $"Client: {username}";
                 }
                 catch (Exception ex)
@@ -121,18 +153,12 @@ namespace Windows_Forms_Chat
                     ChatTextBox.Text += "Error: " + ex;
                     ChatTextBox.AppendText(Environment.NewLine);
                 }
-
             }
         }
 
+        // METHOD: SERVER SENDS A MESSAGE
         private void SendButton_Click(object sender, EventArgs e)
         {
-            /*if (client != null)
-                client.SendString(TypeTextBox.Text);
-            else if (server != null)
-                server.SendToAll(TypeTextBox.Text, null);
-            */
-
             // Get message from textbox
             string message = TypeTextBox.Text.Trim();
 
@@ -145,20 +171,25 @@ namespace Windows_Forms_Chat
                 client.SendString(message);
             else if (server != null)
             {
+                // Check if it's a server command first
                 if (server.LocalCommand(TypeTextBox.Text) == false)
-                    server.SendToAll("Server: " + message, null);
+                {
+                    // Display server name as "Server/username"
+                    string serverDisplayName = "[Server - " + server.serverName + "]";
+
+                    // Send message to all clients 
+                    server.SendToAll(serverDisplayName + ": " + message, null);
+
+                    // Also show in server chat box
+                    server.AddToChat(serverDisplayName + ": " + message);
+                }
             }
                  
-
-                
-
-            // 🧹 Clear the textbox after sending
+            // Clear the textbox after sending
             TypeTextBox.Clear();
 
-            // Optional: keep cursor ready for typing
+            // Keep cursor ready for typing
             TypeTextBox.Focus();
-
-
         }
 
         private void Form1_Load(object sender, EventArgs e)
