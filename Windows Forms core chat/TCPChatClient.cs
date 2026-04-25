@@ -99,10 +99,18 @@ namespace Windows_Forms_Chat
             try
             {
                 received = currentClientSocket.socket.EndReceive(AR);
+
+                // let users know if the server drops out
+                if (received == 0)
+                {
+                    AddToChat("Server disconnected.");
+                    currentClientSocket.socket.Close();
+                    return;
+                }
             }
             catch (SocketException)
             {
-                AddToChat("Client forcefully disconnected");
+                AddToChat("Connection lost. Server may have disconnected");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 currentClientSocket.socket.Close();
                 return;
@@ -126,7 +134,6 @@ namespace Windows_Forms_Chat
 
             //we just received a message from this socket, better keep an ear out with another thread for the next one
             currentClientSocket.socket.BeginReceive(currentClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, currentClientSocket);
-        
         }
         public void Close()
         {

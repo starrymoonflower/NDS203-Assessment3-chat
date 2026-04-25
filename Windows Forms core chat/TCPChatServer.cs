@@ -118,7 +118,7 @@ namespace Windows_Forms_Chat
                                     SendToAll(msg, c);
 
                                     // personalised message for the target user
-                                    byte[] data = Encoding.ASCII.GetBytes("Server: You have been promoted to Moderator.");
+                                    byte[] data = Encoding.ASCII.GetBytes("[Server - " + serverName + "]: You have been promoted to Moderator.");
                                     c.socket.Send(data);
                                 }
                                 else
@@ -132,7 +132,7 @@ namespace Windows_Forms_Chat
                                     SendToAll(msg, c);
 
                                     // personalised message for the target user
-                                    byte[] data = Encoding.ASCII.GetBytes("Server: You have been demoted from Moderator.");
+                                    byte[] data = Encoding.ASCII.GetBytes("[Server - " + serverName + "]: You have been demoted from Moderator.");
                                     c.socket.Send(data);
                                 }
 
@@ -151,9 +151,6 @@ namespace Windows_Forms_Chat
                     }
 
                     return true;
-
-                default: 
-                    return false;
 
                 case "!kick":
                     // Server can kick any connected user
@@ -195,6 +192,9 @@ namespace Windows_Forms_Chat
                 case "!time":
                     AddToChat("[Server - " + serverName + "]: " + DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt"));
                     return true;
+
+                default:
+                    return false;
             }
         }
 
@@ -210,7 +210,7 @@ namespace Windows_Forms_Chat
             }
             catch (SocketException)
             {
-                AddToChat("Client forcefully disconnected");
+                AddToChat("[Server - " + serverName + "]: A client disconnected unexpectedly.");
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 currentClientSocket.socket.Close();
                 clientSockets.Remove(currentClientSocket);
@@ -260,7 +260,6 @@ namespace Windows_Forms_Chat
                     }
                     break;
                 
-                    // Client requested time
                 case "!commands":
                     string commandList =
                         "Available commands:\n" +
@@ -308,7 +307,7 @@ namespace Windows_Forms_Chat
                 case "!time":
                     // Create a message showing the server's current time
                     string timeText = "Server date/time: " + DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
-                    byte[] timeMsg = Encoding.ASCII.GetBytes("Server time: " + DateTime.Now.ToString());
+                    byte[] timeMsg = Encoding.ASCII.GetBytes(timeText);
 
                     // Send the time only to the client who asked
                     currentClientSocket.socket.Send(timeMsg);
@@ -571,7 +570,7 @@ namespace Windows_Forms_Chat
                 return "No users connected.";
 
             // return usernames as one readable sentence
-            return "Connected users:\n-" + string.Join("\n- ", usernames);
+            return "Connected users:\n- " + string.Join("\n- ", usernames);
         }
 
         public string GetModerators()
