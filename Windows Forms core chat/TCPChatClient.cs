@@ -18,6 +18,12 @@ namespace Windows_Forms_Chat
         public int serverPort;
         public string serverIP;
 
+        // track if client is intentionally exiting
+        public bool isExiting = false;
+
+        // store username before server accepts
+        public string pendingUsername = "";
+
 
         public static TCPChatClient CreateInstance(int port, int serverPort, string serverIP, RichTextBox chatTextBox)
         {
@@ -77,6 +83,16 @@ namespace Windows_Forms_Chat
                     return;
                 }
 
+                if (text.ToLower() == "!exit")
+                {
+                    isExiting = true;
+                }
+
+                if (text.ToLower().StartsWith("!username "))
+                {
+                    pendingUsername = text.Substring(10).Trim();
+                }
+
                 byte[] buffer = Encoding.ASCII.GetBytes(text);
                 socket.Send(buffer, 0, buffer.Length, SocketFlags.None);
             }
@@ -90,6 +106,7 @@ namespace Windows_Forms_Chat
             }
         }
 
+        
         public void ReceiveCallback(IAsyncResult AR)
         {
             ClientSocket currentClientSocket = (ClientSocket)AR.AsyncState;
@@ -103,7 +120,10 @@ namespace Windows_Forms_Chat
                 // let users know if the server drops out
                 if (received == 0)
                 {
-                    AddToChat("Server disconnected.");
+                    if (!isExiting)
+                    {
+                        AddToChat("Server disconnected.");
+                    }
                     currentClientSocket.socket.Close();
                     return;
                 }
@@ -125,6 +145,19 @@ namespace Windows_Forms_Chat
 
             //text is from server but could have been broadcast from the other clients
             AddToChat( text );
+
+            if (text.StartsWith("Username accepted"))
+            {
+                chatTextBox.Invoke((Action)delegate
+                {
+                    Form parentForm = chatTextBox.FindForm();
+
+                    if (parentForm != null)
+                    {
+                        parentForm.Text = "Client: " + pendingUsername;
+                    }
+                });
+            }
 
             if (text.Contains("You have been kicked"))
             {

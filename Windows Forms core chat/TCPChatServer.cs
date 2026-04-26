@@ -18,6 +18,9 @@ namespace Windows_Forms_Chat
         //connected clients
         public List<ClientSocket> clientSockets = new List<ClientSocket>();
 
+        // kicked user should not cause unexpected disconnect
+        public bool kicked;
+
         public static TCPChatServer createInstance(int port, RichTextBox chatTextBox)
         {
             TCPChatServer tcp = null;
@@ -33,6 +36,7 @@ namespace Windows_Forms_Chat
             return tcp;
         }
 
+        // METHOD:
         public void SetupServer()
         {
             //chatTextBox.Text += "Setting up server...\n";
@@ -45,6 +49,7 @@ namespace Windows_Forms_Chat
             AddToChat("Server setup complete");
         }
 
+        // METHOD:
         public void CloseAllSockets()
         {
             foreach (ClientSocket clientSocket in clientSockets)
@@ -56,6 +61,7 @@ namespace Windows_Forms_Chat
             serverSocket.Close();
         }
 
+        // METHOD:
         public void AcceptCallback(IAsyncResult AR)
         {
             Socket joiningSocket;
@@ -81,6 +87,7 @@ namespace Windows_Forms_Chat
             serverSocket.BeginAccept(AcceptCallback, null);
         }
 
+        // METHOD:
         public bool LocalCommand(string text)
         {
             // Split server message into command parts
@@ -198,6 +205,7 @@ namespace Windows_Forms_Chat
             }
         }
 
+        // METHOD:
         public void ReceiveCallback(IAsyncResult AR)
         {
             ClientSocket currentClientSocket = (ClientSocket)AR.AsyncState;
@@ -210,7 +218,12 @@ namespace Windows_Forms_Chat
             }
             catch (SocketException)
             {
-                AddToChat("[Server - " + serverName + "]: A client disconnected unexpectedly.");
+                if (!currentClientSocket.kicked)
+                {
+                    // stops server saying "unexpectantly" when kicked was intentional
+                    AddToChat("[Server - " + serverName + "]: A client disconnected unexpectedly.");
+                }
+                
                 // Don't shutdown because the socket may be disposed and its disconnected anyway.
                 currentClientSocket.socket.Close();
                 clientSockets.Remove(currentClientSocket);
@@ -227,7 +240,7 @@ namespace Windows_Forms_Chat
             switch (command)
             {
                 case "!kick":
-                    // Only moderators can kick
+                    // Only moderators can remove a user from the chat
                     if (currentClientSocket.moderator == true)
                     {
                         // example !kick Bob
@@ -238,7 +251,7 @@ namespace Windows_Forms_Chat
                             // Try to kick target user
                             bool kicked = KickUser(targetUser, currentClientSocket.username);
 
-                            // If user was not found
+                            // Notify if target user was not found
                             if (!kicked)
                             {
                                 byte[] failMsg = Encoding.ASCII.GetBytes("User not found: " + targetUser);
@@ -259,8 +272,10 @@ namespace Windows_Forms_Chat
                         currentClientSocket.socket.Send(failMsg);
                     }
                     break;
-                
+
+                // Sends a list of available commands to user who ask  
                 case "!commands":
+                    
                     string commandList =
                         "Available commands:\n" +
                         "!commands - show command list\n" +
@@ -292,20 +307,17 @@ namespace Windows_Forms_Chat
 
                 // When the server receives the !who command
                 // it sends back a list of all connected usernames to the requesting client
-                // to be displayed in their chat window
                 case "!who":
-                    // Get a list of all connected usernames
+
                     string users = GetConnectedUsers();
 
-                    // Convert the string into bytes so it can be sent through the socket
                     byte[] whoMsg =Encoding.ASCII.GetBytes(users);
-
-                    // Send the list only to the client who asked
                     currentClientSocket.socket.Send(whoMsg);
                     break;
 
+                // Create a message showing the server's current time
                 case "!time":
-                    // Create a message showing the server's current time
+                    
                     string timeText = "Server date/time: " + DateTime.Now.ToString("dddd, dd MMMM yyyy hh:mm tt");
                     byte[] timeMsg = Encoding.ASCII.GetBytes(timeText);
 
@@ -338,57 +350,59 @@ namespace Windows_Forms_Chat
                     // Remove client from connected list
                     clientSockets.Remove(currentClientSocket);
 
-                    // Notify server window
+                    // Notify server and remaining clients
                     AddToChat("[Server - " + serverName + "]: " + exitingUser + " has left the chat.");
-                    // Notify remaining clients
                     SendToAll("[Server - " + serverName + "]: " + exitingUser + " has left the chat.", null);
                     
                     return;
-               
+                
+                // Handles client username registration
                 case "!username":
                     if (param.Length > 1)
                     {
-                        // Read the username the client wants
                         string username = param[1].Trim();
 
-                        // Check if another client is already using it
+                        // Check if username already exists
                         if (!CheckUsernameExists(username, currentClientSocket))
                         {
                             // Only save it AFTER validation succeeds
                             currentClientSocket.username = username;
+                            currentClientSocket.usernameAccepted = true;
 
-                            // Tell the server window
-                            AddToChat("User with name " + username + " connected!");
+                            // Tell the server
+                            AddToChat("[Server - " + serverName + "]: User with name " + username + " connected!");
 
                             // Tell the client it worked
-                            byte[] successMsg = Encoding.ASCII.GetBytes("Username accepted");
+                            byte[] successMsg = Encoding.ASCII.GetBytes("Username accepted. You are now connected to the chat.");
                             currentClientSocket.socket.Send(successMsg);
                         }
                         else
                         {
-                            // Tell the client it failed
-                            byte[] failMsg = Encoding.ASCII.GetBytes("Username already taken");
+                            // Username already taken - allow retry
+                            currentClientSocket.usernameAccepted = false;
+                            
+                            byte[] failMsg = Encoding.ASCII.GetBytes("Username already taken. Please choose another one using !username [name] ");
                             currentClientSocket.socket.Send(failMsg);
-
-                            // Disconnect the client
-                            currentClientSocket.socket.Close();
-                            clientSockets.Remove(currentClientSocket);
-
-                            AddToChat("Duplicate username - client disconnected");
-                            return;
+                            
+                            // Allow the user to try another username
+                            AddToChat("[Server - " + serverName + "]: Username already taken: " + username);
                         }
+                    }
+                    else
+                    {
+                        byte[] failMsg = Encoding.ASCII.GetBytes("Usage: !username [name]");
+                        currentClientSocket.socket.Send(failMsg);
                     }
                     break;
 
-                    // sends a private message to a specified user
-                    case "!whisper": 
-                    // Check command has username and message
+                // Sends a private message to a specified user
+                case "!whisper": 
+                    
                     if (param.Length > 2)
                     {
                         // Username of the person receiving the whisper
                         string targetUser = param[1].Trim();
 
-                        // Join all words after username into one message
                         // removes "!whisper" and the username from the message
                         string privateMessage = string.Join(" ", param, 2, param.Length - 2).Trim();
 
@@ -400,7 +414,7 @@ namespace Windows_Forms_Chat
                             break;
                         }
 
-                        // Format whisper message for receiver
+                        // Whisper message for receiver
                         string whisperMsg = "[Whisper from " + currentClientSocket.username + "]: " + privateMessage;
 
                         // Try to send whisper to the targer user
@@ -430,12 +444,22 @@ namespace Windows_Forms_Chat
                     break;
 
                     default:
-                    //normal message broadcast out to all clients
+                    // normal message broadcast out to all clients
                     // If username not set yet show Unknown
                     // otherwise use the client's actual username
-                    string name = string.IsNullOrEmpty(currentClientSocket.username)? "Unknown": currentClientSocket.username;
                     
-                    //send the person username who we've received the message from
+
+                    // Prevent chatting until username has been accepted
+                    if (currentClientSocket.usernameAccepted == false)
+                    {
+                        byte[] failMsg = Encoding.ASCII.GetBytes("Please choose a valid username first using !username [name].");
+                        currentClientSocket.socket.Send(failMsg);
+                        break;
+                    }
+
+                    // User the accepted username
+                    string name = currentClientSocket.username;
+
                     string msg = name + ": " + text;
 
                     // Display the message on the server chat window too
@@ -450,6 +474,7 @@ namespace Windows_Forms_Chat
             currentClientSocket.socket.BeginReceive(currentClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, currentClientSocket);
         }
 
+        // METHOD:
         public void SendToAll(string str, ClientSocket from)
        
         {
@@ -465,6 +490,7 @@ namespace Windows_Forms_Chat
             }
         }
 
+        // METHOD:
         public bool SendToUsername(string user, string msg)
         {
             // Loop through connected clients
@@ -492,9 +518,10 @@ namespace Windows_Forms_Chat
             return false;
         }
 
+        // METHOD: Kicks a selected user from the chat
         public bool KickUser(string targetUser, string kickedBy)
         {
-            // Loop backwards so removing from list is safer
+            // Loop backwards removing from list 
             for (int i = clientSockets.Count - 1; i >= 0; i--)
             {
                 ClientSocket c = clientSockets[i];
@@ -506,6 +533,8 @@ namespace Windows_Forms_Chat
                 // Find the user to kick
                 if (c.username.Equals(targetUser, StringComparison.OrdinalIgnoreCase))
                 {
+                    c.kicked = true;
+
                     // Tell kicked user
                     byte[] kickMsg = Encoding.ASCII.GetBytes("You have been kicked from the chat.");
                     c.socket.Send(kickMsg);
@@ -516,10 +545,32 @@ namespace Windows_Forms_Chat
                     // Remove from connected clients list
                     clientSockets.RemoveAt(i);
 
-                    // Tell everyone what happened
-                    string msg = "[Server - " + serverName + "]: " + targetUser + " was kicked out by " + kickedBy;
-                    AddToChat(msg);
-                    SendToAll(msg, null);
+                    // Message for server and other clients
+                    string publicMsg = "[Server - " + serverName + "]: " + targetUser + " was kicked out by " + kickedBy;
+
+                    // Show in server chat window
+                    AddToChat(publicMsg);
+
+                    // Find the user who kicked them
+                    ClientSocket kicker = FindUser(kickedBy);
+
+                    if (kicker != null)
+                    {
+                        // Personal message for the moderator who kicked the user
+                        byte[] personalMsg = Encoding.ASCII.GetBytes(
+                        "[Server - " + serverName + "]: " + targetUser + " was kicked out by you."
+                        );
+
+                        kicker.socket.Send(personalMsg);
+
+                        // Send message to everyone except the kicker
+                        SendToAll(publicMsg, kicker);
+                    }
+                    else
+                    {
+                        // if server performed the kick, send message to all 
+                        SendToAll(publicMsg, null);
+                    }
 
                     return true;
                 }
@@ -529,6 +580,7 @@ namespace Windows_Forms_Chat
             return false;
         }
         
+        // METHOD:
         public bool CheckUsernameExists(string user, ClientSocket currentClientSocket)
         {
             foreach (ClientSocket c in clientSockets)
@@ -591,6 +643,21 @@ namespace Windows_Forms_Chat
             }
 
             return "[Server - " + serverName + "]: Moderators: " + string.Join(", ", moderators);
+        }
+
+        // METHOD: Helper method 
+        public ClientSocket FindUser(string username)
+        {
+            foreach (ClientSocket c in clientSockets)
+            {
+                if (!string.IsNullOrWhiteSpace(c.username) &&
+                    c.username.Equals(username, StringComparison.OrdinalIgnoreCase))
+                {
+                    return c;
+                }
+            }
+
+            return null;
         }
     }
 }

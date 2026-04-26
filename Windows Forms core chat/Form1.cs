@@ -141,11 +141,14 @@ namespace Windows_Forms_Chat
 
                     client.ConnectToServer();
 
+                    // Store username locally until server confirms it
+                    client.pendingUsername = username;
+
                     // Send username to server
                     client.SendString("!username " + username);
 
                     // Show username in the window title
-                    this.Text = $"Client: {username}";
+                    // this.Text = $"Client: {username}";
                 }
                 catch (Exception ex)
                 {

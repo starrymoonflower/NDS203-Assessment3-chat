@@ -12,6 +12,8 @@ namespace Windows_Forms_Chat
     {
         //add other attributes to this, e.g username, what state the client is in etc
 
+        public bool usernameAccepted = false;
+        public bool kicked;
         public bool moderator;
         public string username;
         public Socket socket;
