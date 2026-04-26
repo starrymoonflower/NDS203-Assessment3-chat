@@ -1,4 +1,4 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Net;
@@ -36,7 +36,6 @@ namespace Windows_Forms_Chat
             return tcp;
         }
 
-        // METHOD:
         public void SetupServer()
         {
             //chatTextBox.Text += "Setting up server...\n";
@@ -49,7 +48,6 @@ namespace Windows_Forms_Chat
             AddToChat("Server setup complete");
         }
 
-        // METHOD:
         public void CloseAllSockets()
         {
             foreach (ClientSocket clientSocket in clientSockets)
@@ -61,7 +59,6 @@ namespace Windows_Forms_Chat
             serverSocket.Close();
         }
 
-        // METHOD:
         public void AcceptCallback(IAsyncResult AR)
         {
             Socket joiningSocket;
@@ -87,7 +84,6 @@ namespace Windows_Forms_Chat
             serverSocket.BeginAccept(AcceptCallback, null);
         }
 
-        // METHOD:
         public bool LocalCommand(string text)
         {
             // Split server message into command parts
@@ -205,7 +201,6 @@ namespace Windows_Forms_Chat
             }
         }
 
-        // METHOD:
         public void ReceiveCallback(IAsyncResult AR)
         {
             ClientSocket currentClientSocket = (ClientSocket)AR.AsyncState;
@@ -365,7 +360,7 @@ namespace Windows_Forms_Chat
                         // Check if username already exists
                         if (!CheckUsernameExists(username, currentClientSocket))
                         {
-                            // Only save it AFTER validation succeeds
+                            // Only save it after validation succeeds
                             currentClientSocket.username = username;
                             currentClientSocket.usernameAccepted = true;
 
@@ -474,7 +469,6 @@ namespace Windows_Forms_Chat
             currentClientSocket.socket.BeginReceive(currentClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, currentClientSocket);
         }
 
-        // METHOD:
         public void SendToAll(string str, ClientSocket from)
        
         {
@@ -490,7 +484,6 @@ namespace Windows_Forms_Chat
             }
         }
 
-        // METHOD:
         public bool SendToUsername(string user, string msg)
         {
             // Loop through connected clients
@@ -580,7 +573,6 @@ namespace Windows_Forms_Chat
             return false;
         }
         
-        // METHOD:
         public bool CheckUsernameExists(string user, ClientSocket currentClientSocket)
         {
             foreach (ClientSocket c in clientSockets)
@@ -645,7 +637,6 @@ namespace Windows_Forms_Chat
             return "[Server - " + serverName + "]: Moderators: " + string.Join(", ", moderators);
         }
 
-        // METHOD: Helper method 
         public ClientSocket FindUser(string username)
         {
             foreach (ClientSocket c in clientSockets)

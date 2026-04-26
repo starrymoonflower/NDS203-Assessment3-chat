@@ -24,8 +24,30 @@ namespace Windows_Forms_Chat
             //dumb https://iandotnet.wordpress.com/tag/multithreading-how-to-update-textbox-on-gui-from-another-thread/
             chatTextBox.Invoke((Action)delegate
             {
-                chatTextBox.SelectionColor = Color.Black;
-                chatTextBox.AppendText(str);
+                // Find the colon that separates username and message
+                int colonIndex = str.IndexOf(':');
+
+                if (colonIndex > 0)
+                {
+                    // Username before colon
+                    string usernameText = str.Substring(0, colonIndex + 1);
+                    string messageText = str.Substring(colonIndex + 1);
+
+                    // Set username colour blue and bold
+                    chatTextBox.SelectionColor = Color.Blue;
+                    chatTextBox.AppendText(usernameText);
+
+                    // Set message colour black
+                    chatTextBox.SelectionColor = Color.Black;
+                    chatTextBox.AppendText(messageText);
+                }
+                else
+                {
+                    // if no colon just print normally
+                    chatTextBox.SelectionColor = Color.Black;
+                    chatTextBox.AppendText(str);
+                }
+
                 chatTextBox.AppendText(Environment.NewLine);
             });
 

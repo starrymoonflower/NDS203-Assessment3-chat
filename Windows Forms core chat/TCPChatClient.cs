@@ -14,7 +14,6 @@ namespace Windows_Forms_Chat
         public Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         public ClientSocket clientSocket = new ClientSocket();
 
-
         public int serverPort;
         public string serverIP;
 
@@ -40,7 +39,6 @@ namespace Windows_Forms_Chat
                 tcp.serverIP = serverIP;
                 tcp.chatTextBox = chatTextBox;
                 tcp.clientSocket.socket = tcp.socket;
-
             }
 
             return tcp;
@@ -105,7 +103,6 @@ namespace Windows_Forms_Chat
                 AddToChat("Connection lost. You cannot send messages.");
             }
         }
-
         
         public void ReceiveCallback(IAsyncResult AR)
         {
