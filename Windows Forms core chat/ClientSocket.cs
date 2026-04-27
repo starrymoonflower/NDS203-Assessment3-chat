@@ -7,6 +7,14 @@ using System.Data.SQLite;
 
 namespace Windows_Forms_Chat
 {   
+    public enum ClientState
+    {
+        // define three value or state 
+        LOGIN,
+        CHATTING,
+        PLAYING
+    }
+
     // Represents a single connected client on the server side 
     // Stores info about the client - socket connection, username, moderator status
     // and data buffer for receiving messages. 
@@ -14,6 +22,8 @@ namespace Windows_Forms_Chat
     {
         //add other attributes to this, e.g username, what state the client is in etc
 
+        // login state - a client will default to that when log in
+        public ClientState state = ClientState.LOGIN;
         public bool usernameAccepted = false;
         public bool kicked;
         public bool moderator;

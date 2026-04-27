@@ -22,3 +22,27 @@ C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\
 C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\runtimes\win-x86\native\SQLite.Interop.dll
 C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.csproj.AssemblyReference.cache
 C:\Users\jessc\source\repos\NDS203-Assessment2-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows .38B99F9B.Up2Date
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\Windows Forms core chat.exe
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\Windows Forms core chat.deps.json
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\Windows Forms core chat.runtimeconfig.json
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\Windows Forms core chat.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\Windows Forms core chat.pdb
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\System.Data.SQLite.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\runtimes\linux-x64\native\SQLite.Interop.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\runtimes\osx-x64\native\SQLite.Interop.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\runtimes\win-x64\native\SQLite.Interop.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\bin\Debug\net8.0-windows7.0\runtimes\win-x86\native\SQLite.Interop.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.csproj.AssemblyReference.cache
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows_Forms_Chat.Form1.resources
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.csproj.GenerateResource.cache
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.AssemblyInfoInputs.cache
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.AssemblyInfo.cs
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.csproj.CoreCompileInputs.cache
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.sourcelink.json
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows .38B99F9B.Up2Date
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\refint\Windows Forms core chat.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.pdb
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.genruntimeconfig.cache
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\ref\Windows Forms core chat.dll

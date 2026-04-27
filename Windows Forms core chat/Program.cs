@@ -16,6 +16,8 @@ namespace Windows_Forms_Chat
         [STAThread]
         static void Main()
         {
+            DatabaseAccess.StartupDatabase(); // rename it to StartupDatabase?
+            
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
