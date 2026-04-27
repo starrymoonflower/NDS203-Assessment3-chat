@@ -4,6 +4,7 @@ using System.Text;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
+using System.Data.SQLite;
 using System.Windows.Forms;
 
 //https://github.com/AbleOpus/NetworkingSamples/blob/master/MultiServer/Program.cs
@@ -21,6 +22,9 @@ namespace Windows_Forms_Chat
         // kicked user should not cause unexpected disconnect
         public bool kicked;
 
+        //SQLite connection variable
+        public SQLiteConnection dbConnection;
+
         public static TCPChatServer createInstance(int port, RichTextBox chatTextBox)
         {
             TCPChatServer tcp = null;
@@ -36,6 +40,7 @@ namespace Windows_Forms_Chat
             return tcp;
         }
 
+        //METHOD: 
         public void SetupServer()
         {
             //chatTextBox.Text += "Setting up server...\n";
@@ -44,8 +49,44 @@ namespace Windows_Forms_Chat
             serverSocket.Listen(0);
             //kick off thread to read connecting clients, when one connects, it'll call out AcceptCallback function
             serverSocket.BeginAccept(AcceptCallback, this);
+
+
+            //setup database when server starts
+            //create and open database connection
+            dbConnection = new SQLiteConnection("Data Source=chat.db;Version=3;");
+            dbConnection.Open();
+
+            AddToChat("DB path: " + System.IO.Path.GetFullPath("chat.db"));
+
+            // Create Users table if it doesn't exist
+            string createTable = @"CREATE TABLE IF NOT EXISTS Users (
+                ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                Username TEXT UNIQUE,
+                Password TEXT,
+                Wins INTEGER DEFAULT 0,
+                Losses INTEGER DEFAULT 0,
+                Draws INTEGER DEFAULT 0
+            
+            );";
+
+            SQLiteCommand cmd = new SQLiteCommand(createTable, dbConnection);
+            cmd.ExecuteNonQuery();
+
+
+
+
+
+
+
+
+
+
+
             //chatTextBox.Text += "Server setup complete" +Environment.NewLine;
             AddToChat("Server setup complete");
+
+           
+
         }
 
         public void CloseAllSockets()
@@ -463,6 +504,37 @@ namespace Windows_Forms_Chat
                     // Send the message to all connected clients
                     SendToAll(msg, null);
                     break;
+
+                case "!register":
+
+                    // !register Bob password123
+                    if (param.Length > 2)
+                    {
+                        string username = param[1].Trim();
+                        string password = param[2].Trim();
+
+                        bool registered = RegisterUser(username, password);
+
+                        if (registered)
+                        {
+                            byte[] successMsg = Encoding.ASCII.GetBytes("Registration successful. " +
+                                "You can now login using !login [username] [password].");
+                            currentClientSocket.socket.Send(successMsg);
+                        }
+                        else
+                        {
+                            byte[] failMsg = Encoding.ASCII.GetBytes("Registration failed. Try registering with a different username.");
+                            currentClientSocket.socket.Send(failMsg);
+
+                        }
+                    }
+                  
+                    else
+                    {
+                        byte[] failMsg = Encoding.ASCII.GetBytes("Usage: !register [username] [password]");
+                        currentClientSocket.socket.Send(failMsg);
+                    }
+                    break;
             }
 
             //we just received a message from this socket, better keep an ear out with another thread for the next one
@@ -649,6 +721,30 @@ namespace Windows_Forms_Chat
             }
 
             return null;
+        }
+
+        // METHOD: Register a user
+        public bool RegisterUser(string username, string password)
+        {
+            try
+            {
+                string sql = @"
+                    INSERT INTO Users (Username, Password, Wins, Losses, Draws)
+                    VALUES (@username, @password, 0, 0, 0);
+                ";
+
+                SQLiteCommand cmd = new SQLiteCommand(sql, dbConnection);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@password", password);
+
+                int rows = cmd.ExecuteNonQuery();
+
+                return rows > 0;
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Data.SQLite;
+
 using System.Windows.Forms;
 
 namespace Windows_Forms_Chat

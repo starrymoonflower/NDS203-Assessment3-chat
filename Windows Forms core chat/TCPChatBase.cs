@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Data.SQLite;
+
 
 namespace Windows_Forms_Chat
 {
@@ -33,7 +35,7 @@ namespace Windows_Forms_Chat
                     string usernameText = str.Substring(0, colonIndex + 1);
                     string messageText = str.Substring(colonIndex + 1);
 
-                    // Set username colour blue and bold
+                    // Set username colour blue
                     chatTextBox.SelectionColor = Color.Blue;
                     chatTextBox.AppendText(usernameText);
 
@@ -50,7 +52,6 @@ namespace Windows_Forms_Chat
 
                 chatTextBox.AppendText(Environment.NewLine);
             });
-
         }
     }
 }

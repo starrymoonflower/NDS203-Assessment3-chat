@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Data.SQLite;
+
 using System.Windows.Forms;
 
 //reference: https://github.com/AbleOpus/NetworkingSamples/blob/master/MultiClient/Program.cs
@@ -142,6 +144,20 @@ namespace Windows_Forms_Chat
 
             //text is from server but could have been broadcast from the other clients
             AddToChat( text );
+
+            chatTextBox.Invoke((Action)delegate
+            {
+                Form parentForm = chatTextBox.FindForm();
+
+                if (parentForm != null)
+                {
+                    Control typeBox = parentForm.Controls["TypeTextBox"];
+                    if (typeBox != null)
+                    {
+                        typeBox.Focus();
+                    }
+                }
+            });
 
             if (text.StartsWith("Username accepted"))
             {
