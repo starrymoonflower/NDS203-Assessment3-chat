@@ -50,8 +50,6 @@
             button7 = new System.Windows.Forms.Button();
             button8 = new System.Windows.Forms.Button();
             button9 = new System.Windows.Forms.Button();
-            usernameTextbox = new System.Windows.Forms.RichTextBox();
-            label6 = new System.Windows.Forms.Label();
             SuspendLayout();
             // 
             // label1
@@ -112,11 +110,11 @@
             // 
             ChatTextBox.Location = new System.Drawing.Point(12, 121);
             ChatTextBox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            ChatTextBox.Multiline = true;
             ChatTextBox.Name = "ChatTextBox";
             ChatTextBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             ChatTextBox.Size = new System.Drawing.Size(530, 155);
             ChatTextBox.TabIndex = 6;
+            ChatTextBox.Text = "";
             ChatTextBox.TextChanged += ChatTextBox_TextChanged;
             // 
             // TypeTextBox
@@ -287,30 +285,11 @@
             button9.UseVisualStyleBackColor = false;
             button9.Click += button9_Click;
             // 
-            // usernameTextbox
-            // 
-            usernameTextbox.Location = new System.Drawing.Point(370, 69);
-            usernameTextbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            usernameTextbox.Name = "usernameTextbox";
-            usernameTextbox.Size = new System.Drawing.Size(140, 23);
-            usernameTextbox.TabIndex = 14;
-            // 
-            // label6
-            // 
-            label6.AutoSize = true;
-            label6.Location = new System.Drawing.Point(370, 53);
-            label6.Name = "label6";
-            label6.Size = new System.Drawing.Size(60, 15);
-            label6.TabIndex = 15;
-            label6.Text = "Username";
-            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(1009, 358);
-            Controls.Add(label6);
-            Controls.Add(usernameTextbox);
             Controls.Add(button9);
             Controls.Add(button8);
             Controls.Add(button7);
@@ -366,8 +345,6 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
-        private System.Windows.Forms.RichTextBox usernameTextbox;
-        private System.Windows.Forms.Label label6;
     }
 }
 

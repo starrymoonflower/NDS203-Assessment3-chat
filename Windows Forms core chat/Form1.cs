@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SQLite;
 using System.Drawing;
 using System.Linq;
 using System.Net;
@@ -9,9 +10,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Data.SQLite;
-
 using System.Windows.Forms;
+using Windows_Forms_Chat;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 
@@ -20,7 +20,7 @@ namespace Windows_Forms_Chat
 {
     public partial class Form1 : Form
     {
-        TicTacToe ticTacToe = new TicTacToe();
+        public TicTacToe ticTacToe = new TicTacToe();
         TCPChatServer server = null;
         TCPChatClient client = null;
 
@@ -41,7 +41,7 @@ namespace Windows_Forms_Chat
         // METHOD: HOST / START SERVER
         // This runs when the user clicks the "Host" button
         private void HostButton_Click(object sender, EventArgs e)
-        {   
+        {
             // Only allow hosting if not already hosting or connected as a client
             if (CanHostOrJoin())
             {
@@ -49,9 +49,9 @@ namespace Windows_Forms_Chat
                 {
                     // Read the port number entered by the user 
                     int port = int.Parse(MyPortTextBox.Text);
-                    
+
                     // Create a new server instance using the port and chat display box
-                    server = TCPChatServer.createInstance(port, ChatTextBox);
+                    server = TCPChatServer.createInstance(port, ChatTextBox, ticTacToe);
 
                     // If server failed to create (invalid port etc), throw an error
                     if (server == null)
@@ -59,13 +59,13 @@ namespace Windows_Forms_Chat
                         throw new Exception("Incorrect port value!");
 
                     // Set server name from textbox (e.g Bob)
-                    string name = usernameTextbox.Text.Trim();
+                    //string name = usernameTextbox.Text.Trim();
 
                     // If empty, default to "Server", Otherwise use the entered name
-                    server.serverName = name == "" ? "Server" : name;
+                    //server.serverName = "Server";
 
                     // Set window title for server
-                    this.Text = "[Server - " + server.serverName + "]";
+                    this.Text = "Server";
 
                     // Start the server (begin listening for client connections)
                     server.SetupServer();
@@ -82,75 +82,31 @@ namespace Windows_Forms_Chat
 
         }
 
+
         // METHOD: CLIENT JOINS THE CHAT SERVER
         private void JoinButton_Click(object sender, EventArgs e)
         {
             if (CanHostOrJoin())
             {
                 try
-                { 
-                    // Get username from textbox first before connecting
-                    // and remove spaces at start/end
-                    string username = usernameTextbox.Text.Trim();
-
-                    // Validate username
-                    if (username == "")
-                    {
-                        MessageBox.Show("Please enter a username");
-                        return;
-                    }
-                   
-                    // Check username length
-                    if (username.Length < 3)
-                    {
-                        MessageBox.Show("Username must be at least 3 characters");
-                        return;
-                    }
-
-                    // Prevent spaces in username
-                    if (username.Contains(" "))
-                    {
-                        MessageBox.Show("Username cannot contain spaces");
-                        return;
-                    }
-
-                    // Allow only letters and numbers
-                    if (!username.All(char.IsLetterOrDigit))
-                    {
-                        MessageBox.Show("Username must contain only letters and numbers");
-                        return;
-                    }
-
-                    // Prevent clients using reserved system/server names
-                    if (username.Equals("server", StringComparison.OrdinalIgnoreCase) ||
-                        username.Equals("admin", StringComparison.OrdinalIgnoreCase) ||
-                        username.Equals("moderator", StringComparison.OrdinalIgnoreCase) ||
-                        username.Equals("mod", StringComparison.OrdinalIgnoreCase) ||
-                        username.Equals("system", StringComparison.OrdinalIgnoreCase))
-                    {
-                        MessageBox.Show("This username is reserved.");
-                        return;
-                    }
-
-                    // Read port numbers and create client only after username is valid
+                {
+                    // Read port numbers
                     int port = int.Parse(MyPortTextBox.Text);
                     int serverPort = int.Parse(serverPortTextBox.Text);
-                    
-                    client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox);
+
+                    // Create client
+                    client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox, ticTacToe);
 
                     if (client == null)
                         throw new Exception("Incorrect port value!");
 
+                    // Connect to server
                     client.ConnectToServer();
 
-                    // Store username locally until server confirms it
-                    client.pendingUsername = username;
-
-                    // Send username to server
-                    client.SendString("!username " + username);
-
-                    // Show username in the window title
-                    // this.Text = $"Client: {username}";
+                    // Open login/register popup
+                    LoginRegisterForm loginForm = new LoginRegisterForm();
+                    loginForm.client = client;
+                    loginForm.Show();
                 }
                 catch (Exception ex)
                 {
@@ -160,6 +116,87 @@ namespace Windows_Forms_Chat
                 }
             }
         }
+        //private void JoinButton_Click(object sender, EventArgs e)
+        //{
+        //    if (CanHostOrJoin())
+        //    {
+        //        try
+        //        { 
+        //            // Get username from textbox first before connecting
+        //            // and remove spaces at start/end
+        //            string username = usernameTextbox.Text.Trim();
+
+        //            // Validate username
+        //            if (username == "")
+        //            {
+        //                MessageBox.Show("Please enter a username");
+        //                return;
+        //            }
+
+        //            // Check username length
+        //            if (username.Length < 3)
+        //            {
+        //                MessageBox.Show("Username must be at least 3 characters");
+        //                return;
+        //            }
+
+        //            // Prevent spaces in username
+        //            if (username.Contains(" "))
+        //            {
+        //                MessageBox.Show("Username cannot contain spaces");
+        //                return;
+        //            }
+
+        //            // Allow only letters and numbers
+        //            if (!username.All(char.IsLetterOrDigit))
+        //            {
+        //                MessageBox.Show("Username must contain only letters and numbers");
+        //                return;
+        //            }
+
+        //            // Prevent clients using reserved system/server names
+        //            if (username.Equals("server", StringComparison.OrdinalIgnoreCase) ||
+        //                username.Equals("admin", StringComparison.OrdinalIgnoreCase) ||
+        //                username.Equals("moderator", StringComparison.OrdinalIgnoreCase) ||
+        //                username.Equals("mod", StringComparison.OrdinalIgnoreCase) ||
+        //                username.Equals("system", StringComparison.OrdinalIgnoreCase))
+        //            {
+        //                MessageBox.Show("This username is reserved.");
+        //                return;
+        //            }
+
+        //            // Read port numbers and create client only after username is valid
+        //            int port = int.Parse(MyPortTextBox.Text);
+        //            int serverPort = int.Parse(serverPortTextBox.Text);
+
+        //            client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox);
+
+        //            if (client == null)
+        //                throw new Exception("Incorrect port value!");
+
+        //            client.ConnectToServer();
+
+        //            LoginRegisterForm loginForm = new LoginRegisterForm();
+        //            loginForm.client = client;
+        //            loginForm.Show();
+
+        //            // Store username locally until server confirms it
+        //            client.pendingUsername = username;
+
+        //            // Send username to server
+        //            client.SendString("!username " + username);
+
+        //            // Show username in the window title
+        //            // this.Text = $"Client: {username}";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            client = null;
+        //            ChatTextBox.Text += "Error: " + ex;
+        //            ChatTextBox.AppendText(Environment.NewLine);
+        //        }
+        //    }
+        //}
 
         // METHOD: SERVER SENDS A MESSAGE
         private void SendButton_Click(object sender, EventArgs e)
@@ -180,7 +217,7 @@ namespace Windows_Forms_Chat
                 if (server.LocalCommand(TypeTextBox.Text) == false)
                 {
                     // Display server name as "Server/username"
-                    string serverDisplayName = "[Server - " + server.serverName + "]";
+                    string serverDisplayName = "Server";
 
                     // Send message to all clients 
                     server.SendToAll(serverDisplayName + ": " + message, null);
@@ -189,7 +226,7 @@ namespace Windows_Forms_Chat
                     server.AddToChat(serverDisplayName + ": " + message);
                 }
             }
-                 
+
             // Clear the textbox after sending
             TypeTextBox.Clear();
 
@@ -209,13 +246,21 @@ namespace Windows_Forms_Chat
             ticTacToe.buttons.Add(button7);
             ticTacToe.buttons.Add(button8);
             ticTacToe.buttons.Add(button9);
+
+            ChatTextBox.Font = new Font("Consolas", 10);
         }
 
         private void AttemptMove(int i)
         {
             if (ticTacToe.myTurn)
-            {
-                bool validMove = ticTacToe.SetTile(i, ticTacToe.playerTileType);
+            {   
+                client.SendMoveAttemptToServer(i);
+                ticTacToe.myTurn = false;
+
+
+
+
+                /*bool validMove = ticTacToe.SetTile(i, ticTacToe.playerTileType);
                 if (validMove)
                 {
                     //tell server about it
@@ -240,7 +285,7 @@ namespace Windows_Forms_Chat
                     ChatTextBox.AppendText("Draw!");
                     ChatTextBox.AppendText(Environment.NewLine);
                     ticTacToe.ResetBoard();
-                }
+                }*/
             }
         }
 
@@ -306,5 +351,11 @@ namespace Windows_Forms_Chat
                 SendButton.PerformClick();
             }
         }
+
+        private void usernameTextbox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
     }
 }

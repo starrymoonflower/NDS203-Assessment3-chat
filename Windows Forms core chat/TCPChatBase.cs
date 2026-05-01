@@ -13,6 +13,9 @@ namespace Windows_Forms_Chat
     {
         public RichTextBox chatTextBox;
         public int port;
+
+        public TicTacToe ticTacToe;
+
         public void SetChat(string str)
         {
             chatTextBox.Invoke((Action)delegate

@@ -25,31 +25,75 @@ namespace Windows_Forms_Chat
         public List<Button> buttons = new List<Button>();//assuming 9 in order
         public TileType[] grid = new TileType[9];
 
+        // Stores whether this client is Player1 or Player2
+        public string playerName = "";
+
         public string GridToString()
         {
             string s = "";
-            //TODO convert values on board to a string e.g "xox___x_o"
-
+            // Convert values on board to a string e.g "xox___x_o"
+            for (int i = 0; i < buttons.Count; i++)
+            {
+                switch (buttons[i].Text)
+                    {
+                    case "X":
+                        s += 'x';
+                        break;
+                    case "O":
+                        s += 'o';
+                        break;
+                    default:
+                        s += '-';
+                        break;
+                }
+            }    
             return s;
         }
         public void StringToGrid(string s)
         {
             //TODO take string s e.g "xox___x_o" and use its values to update grid and the buttons
+            for (int i = 0; i < grid.Length; i++)
+            {
+                switch (s[i])
+                {
+                    case 'x':
+                        grid[i] = TileType.cross;
+                        break;
+                    case 'o':
+                        grid[i] = TileType.naught;
+                        break;
+                    default:
+                        grid[i] = TileType.blank;
+                        break;
+                }
+                if (buttons.Count >= 9) 
+                {
+                    buttons[i].Invoke((Action)delegate
+                    {
+                        buttons[i].Text = TileTypeToString(grid[i]);
+                    });
+                }
+            }
         }
 
         public bool SetTile(int index, TileType tileType)
         {
-            if(grid[index] == TileType.blank)
+            if (index < 0 || index > 8)
+                return false;
+
+            if (grid[index] == TileType.blank)
             {
                 grid[index] = tileType;
                 if (buttons.Count >= 9)
-                    buttons[index].Text = TileTypeToString(tileType);
+                {
+                    buttons[index].Invoke((Action)delegate
+                    {
+                        buttons[index].Text = TileTypeToString(tileType);
+                    });
+                }
                 return true;
             }
-            //else
-
-            return true;
-
+            return false;
         }
 
         public GameState GetGameState()

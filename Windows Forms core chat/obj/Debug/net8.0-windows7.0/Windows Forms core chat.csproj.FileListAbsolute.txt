@@ -46,3 +46,4 @@ C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\
 C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.pdb
 C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows Forms core chat.genruntimeconfig.cache
 C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\ref\Windows Forms core chat.dll
+C:\Users\jessc\source\repos\NDS203-Assessment3-chat\Windows Forms core chat\obj\Debug\net8.0-windows7.0\Windows_Forms_Chat.LoginRegisterForm.resources

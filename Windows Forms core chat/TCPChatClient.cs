@@ -19,14 +19,19 @@ namespace Windows_Forms_Chat
         public int serverPort;
         public string serverIP;
 
+        public ClientState myState = ClientState.LOGIN;
+
         // track if client is intentionally exiting
         public bool isExiting = false;
 
-        // store username before server accepts
-        public string pendingUsername = "";
+        //// store username before server accepts
+        //public string pendingUsername = "";
+
+        // track username on client
+        public string pendingUsername;
 
 
-        public static TCPChatClient CreateInstance(int port, int serverPort, string serverIP, RichTextBox chatTextBox)
+        public static TCPChatClient CreateInstance(int port, int serverPort, string serverIP, RichTextBox chatTextBox, TicTacToe ttt)
         {
             TCPChatClient tcp = null;
             //if port values are valid and ip worth attempting to join
@@ -41,6 +46,7 @@ namespace Windows_Forms_Chat
                 tcp.serverIP = serverIP;
                 tcp.chatTextBox = chatTextBox;
                 tcp.clientSocket.socket = tcp.socket;
+                tcp.ticTacToe = ttt;
             }
 
             return tcp;
@@ -142,8 +148,132 @@ namespace Windows_Forms_Chat
             string text = Encoding.ASCII.GetString(recBuf);
             Console.WriteLine("Received Text: " + text);
 
+            string[] param = text.ToLower().Split(' ');
+
+            switch (param[0])
+            {
+                case "!state":
+                    if (param[1].Equals("0"))
+                    {
+                        myState = ClientState.LOGIN;
+                    }
+                    else if (param[1].Equals("1"))
+                    {
+                        myState = ClientState.CHATTING;
+                    }
+                    else if (param[1].Equals("2"))
+                    {
+                        myState = ClientState.PLAYING;
+                    }
+                    AddToChat("State Updated to: " + myState.ToString());
+                    break;
+
+                case "!player1":
+                    AddToChat("Joined Tic-Tac-Toe as Player 1 (cross)");
+                    ticTacToe.playerTileType = TileType.cross;
+                    ticTacToe.playerName = "Player1";
+                    break;
+
+                case "!player2":
+                    AddToChat("Joined Tic-Tac-Toe as Player 2 (naught)");
+                    ticTacToe.playerTileType = TileType.naught;
+                    ticTacToe.playerName = "Player2";
+                    break;
+                case "!yourturn":
+                    AddToChat("It's your turn" + ticTacToe.playerName);
+                    ticTacToe.myTurn = true;
+                    break;
+                case "!otherturn":
+                    AddToChat("It's the Opponent's turn");
+                    break;
+                case "!board":
+                    string boardState = param[1];
+                    AddToChat("Board Update: " + boardState);
+                    ticTacToe.StringToGrid(boardState);
+                    break;
+                default:
+                    //text is from server but could have been broadcast from the other clients
+                    AddToChat(text);
+                    break;
+
+            }
+
+            // Detect successful login
+            if (text.StartsWith("Login successful"))
+            {
+                // Update the main window title with the logged-in username
+                chatTextBox.Invoke((Action)delegate
+                {
+                    Form parentForm = chatTextBox.FindForm();
+
+                    if (parentForm != null)
+                    {
+                        parentForm.Text = "Client: " + pendingUsername;
+                    }
+                });
+
+                // Only close the login/register form after LOGIN succeeds
+                CloseLoginForm();
+            }
+
+            // Detect successful registration
+            if (text.StartsWith("Registration successful"))
+            {
+                // Keep the form open so the user can now press Login
+                MessageBox.Show("Registration successful. Please login with your username and password.");
+
+                chatTextBox.Invoke((Action)delegate
+                {
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.Name == "LoginRegisterForm")
+                        {
+                            // Clear the textboxes
+                            TextBox userBox = form.Controls["usernameTextBox"] as TextBox;
+                            TextBox passBox = form.Controls["passwordTextBox"] as TextBox;
+
+                            if (userBox != null) userBox.Clear();
+                            if (passBox != null) passBox.Clear();
+
+                            // Put cursor back in username box
+                            userBox?.Focus();
+
+                            break;
+                        }
+                    }
+                });
+            
+            }
+
+
+
+
+
+            //// Detect login/register success
+            //if (text.StartsWith("Login successful") || text.StartsWith("Registration successful"))
+            //{
+            //    // Extract username (we already sent it from popup)
+            //    chatTextBox.Invoke((Action)delegate
+            //    {
+            //        Form parentForm = chatTextBox.FindForm();
+
+            //        if (parentForm != null)
+            //        {
+            //            parentForm.Text = "Client: " + pendingUsername;
+            //        }
+            //    });
+
+            //    // Close login popup
+            //    CloseLoginForm();
+            //}
+            //if (text.StartsWith("Registration successful"))
+            //{
+            //    MessageBox.Show("Registration successful. Please login w ur username and password.");
+            //}
+
+
             //text is from server but could have been broadcast from the other clients
-            AddToChat( text );
+            //AddToChat( text );
 
             chatTextBox.Invoke((Action)delegate
             {
@@ -172,6 +302,11 @@ namespace Windows_Forms_Chat
                 });
             }
 
+            if (text.StartsWith("Login failed") || text.StartsWith("Registration failed"))
+            {
+                MessageBox.Show(text);
+            }
+
             if (text.Contains("You have been kicked"))
             {
                 socket.Close();
@@ -181,10 +316,41 @@ namespace Windows_Forms_Chat
             //we just received a message from this socket, better keep an ear out with another thread for the next one
             currentClientSocket.socket.BeginReceive(currentClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, currentClientSocket);
         }
+        //public void Close()
+        //{
+        //    socket.Close();
+        //}
+
+        // Close popup method
+        private void CloseLoginForm()
+        {
+            chatTextBox.Invoke((Action)delegate
+            {
+                Form parentForm = chatTextBox.FindForm();
+
+                foreach (Form form in Application.OpenForms)
+                {
+                    if (form.Name == "LoginRegisterForm")
+                    {
+                        form.Close();
+                        break;
+                    }
+                }
+            });
+        }
+
+        public void SendMoveAttemptToServer(int i)
+        {
+            SendString("!move " + i.ToString());
+        }
         public void Close()
         {
             socket.Close();
         }
+
+
     }
+
+
 
 }

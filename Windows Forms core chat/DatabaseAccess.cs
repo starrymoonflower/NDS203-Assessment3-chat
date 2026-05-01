@@ -138,14 +138,29 @@ namespace Windows_Forms_Chat
                 SQLiteDataReader reader = cmd.ExecuteReader();
 
                 string result = "Scores:\n";
+                result += "Username        Wins   Losses   Draws\n";
+                result += "--------------------------------------\n";
 
-                // Loop through all rows
                 while (reader.Read())
                 {
-                    result += reader["Username"] + " - Wins: " + reader["Wins"] +
-                              ", Losses: " + reader["Losses"] +
-                              ", Draws: " + reader["Draws"] + "\n";
+                    result += string.Format(
+                        "{0,-15} {1,4} {2,8} {3,7}\n",
+                        reader["Username"],
+                        reader["Wins"],
+                        reader["Losses"],
+                        reader["Draws"]
+                    );
                 }
+
+                //string result = "Scores:\n";
+
+                //// Loop through all rows
+                //while (reader.Read())
+                //{
+                //    result += reader["Username"] + " - Wins: " + reader["Wins"] +
+                //              ", Losses: " + reader["Losses"] +
+                //              ", Draws: " + reader["Draws"] + "\n";
+                //}
 
                 return result;
             }
