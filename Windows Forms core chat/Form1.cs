@@ -58,18 +58,20 @@ namespace Windows_Forms_Chat
                         //thrown exceptions should exit the try and land in next catch
                         throw new Exception("Incorrect port value!");
 
-                    // Set server name from textbox (e.g Bob)
-                    //string name = usernameTextbox.Text.Trim();
-
-                    // If empty, default to "Server", Otherwise use the entered name
-                    //server.serverName = "Server";
-
                     // Set window title for server
                     this.Text = "Server";
 
                     // Start the server (begin listening for client connections)
                     server.SetupServer();
+
+                    // Disable TicTacToe buttons for server
+                    foreach (Button btn in ticTacToe.buttons)
+                    {
+                        btn.Enabled = false;
+                        btn.BackColor = Color.Lavender;
+                    }
                 }
+
                 catch (Exception ex)
                 {
                     // If anything goes wrong, display error in chat box
@@ -81,7 +83,6 @@ namespace Windows_Forms_Chat
             }
 
         }
-
 
         // METHOD: CLIENT JOINS THE CHAT SERVER
         private void JoinButton_Click(object sender, EventArgs e)
@@ -116,87 +117,7 @@ namespace Windows_Forms_Chat
                 }
             }
         }
-        //private void JoinButton_Click(object sender, EventArgs e)
-        //{
-        //    if (CanHostOrJoin())
-        //    {
-        //        try
-        //        { 
-        //            // Get username from textbox first before connecting
-        //            // and remove spaces at start/end
-        //            string username = usernameTextbox.Text.Trim();
-
-        //            // Validate username
-        //            if (username == "")
-        //            {
-        //                MessageBox.Show("Please enter a username");
-        //                return;
-        //            }
-
-        //            // Check username length
-        //            if (username.Length < 3)
-        //            {
-        //                MessageBox.Show("Username must be at least 3 characters");
-        //                return;
-        //            }
-
-        //            // Prevent spaces in username
-        //            if (username.Contains(" "))
-        //            {
-        //                MessageBox.Show("Username cannot contain spaces");
-        //                return;
-        //            }
-
-        //            // Allow only letters and numbers
-        //            if (!username.All(char.IsLetterOrDigit))
-        //            {
-        //                MessageBox.Show("Username must contain only letters and numbers");
-        //                return;
-        //            }
-
-        //            // Prevent clients using reserved system/server names
-        //            if (username.Equals("server", StringComparison.OrdinalIgnoreCase) ||
-        //                username.Equals("admin", StringComparison.OrdinalIgnoreCase) ||
-        //                username.Equals("moderator", StringComparison.OrdinalIgnoreCase) ||
-        //                username.Equals("mod", StringComparison.OrdinalIgnoreCase) ||
-        //                username.Equals("system", StringComparison.OrdinalIgnoreCase))
-        //            {
-        //                MessageBox.Show("This username is reserved.");
-        //                return;
-        //            }
-
-        //            // Read port numbers and create client only after username is valid
-        //            int port = int.Parse(MyPortTextBox.Text);
-        //            int serverPort = int.Parse(serverPortTextBox.Text);
-
-        //            client = TCPChatClient.CreateInstance(port, serverPort, ServerIPTextBox.Text, ChatTextBox);
-
-        //            if (client == null)
-        //                throw new Exception("Incorrect port value!");
-
-        //            client.ConnectToServer();
-
-        //            LoginRegisterForm loginForm = new LoginRegisterForm();
-        //            loginForm.client = client;
-        //            loginForm.Show();
-
-        //            // Store username locally until server confirms it
-        //            client.pendingUsername = username;
-
-        //            // Send username to server
-        //            client.SendString("!username " + username);
-
-        //            // Show username in the window title
-        //            // this.Text = $"Client: {username}";
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            client = null;
-        //            ChatTextBox.Text += "Error: " + ex;
-        //            ChatTextBox.AppendText(Environment.NewLine);
-        //        }
-        //    }
-        //}
+        
 
         // METHOD: SERVER SENDS A MESSAGE
         private void SendButton_Click(object sender, EventArgs e)
@@ -248,44 +169,26 @@ namespace Windows_Forms_Chat
             ticTacToe.buttons.Add(button9);
 
             ChatTextBox.Font = new Font("Consolas", 10);
+            TypeTextBox.Font = new Font("Consolas", 10);
         }
 
         private void AttemptMove(int i)
         {
+            // If running as server, block move
+            if (server != null)
+            {
+                ChatTextBox.AppendText(server.serverName + "Game actions are only available to clients" + Environment.NewLine);
+                return;
+            }
+
             if (ticTacToe.myTurn)
             {   
                 client.SendMoveAttemptToServer(i);
                 ticTacToe.myTurn = false;
-
-
-
-
-                /*bool validMove = ticTacToe.SetTile(i, ticTacToe.playerTileType);
-                if (validMove)
-                {
-                    //tell server about it
-                    //ticTacToe.myTurn = false;//call this too when ready with server
-                }
-                //example, do something similar from server
-                GameState gs = ticTacToe.GetGameState();
-                if (gs == GameState.crossWins)
-                {
-                    ChatTextBox.AppendText("X wins!");
-                    ChatTextBox.AppendText(Environment.NewLine);
-                    ticTacToe.ResetBoard();
-                }
-                if (gs == GameState.naughtWins)
-                {
-                    ChatTextBox.AppendText(") wins!");
-                    ChatTextBox.AppendText(Environment.NewLine);
-                    ticTacToe.ResetBoard();
-                }
-                if (gs == GameState.draw)
-                {
-                    ChatTextBox.AppendText("Draw!");
-                    ChatTextBox.AppendText(Environment.NewLine);
-                    ticTacToe.ResetBoard();
-                }*/
+            }
+            else
+            {
+                ChatTextBox.AppendText("It is not your turn yet." + Environment.NewLine);
             }
         }
 

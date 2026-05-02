@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Data.SQLite;
-
+using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Windows_Forms_Chat
@@ -71,6 +71,9 @@ namespace Windows_Forms_Chat
                     buttons[i].Invoke((Action)delegate
                     {
                         buttons[i].Text = TileTypeToString(grid[i]);
+                        ApplyTileStyle(buttons[i], grid[i]);
+
+                        //buttons[i].Text = TileTypeToString(grid[i]);
                     });
                 }
             }
@@ -89,11 +92,32 @@ namespace Windows_Forms_Chat
                     buttons[index].Invoke((Action)delegate
                     {
                         buttons[index].Text = TileTypeToString(tileType);
+                        ApplyTileStyle(buttons[index], tileType);
                     });
                 }
                 return true;
             }
             return false;
+        }
+
+        private void ApplyTileStyle(Button btn, TileType tile)
+        {
+            if (tile == TileType.cross)
+            {
+                btn.BackColor = Color.FromArgb(186, 147, 255); // lavender
+                btn.ForeColor = Color.White;
+            }
+            else if (tile == TileType.naught)
+            {
+                btn.BackColor = Color.FromArgb(221, 160, 221); // lilac
+                btn.ForeColor = Color.White;
+            }
+            else
+            {
+                // Empty tile: restore original button look
+                btn.BackColor = SystemColors.Control;
+                btn.ForeColor = Color.Black;
+            }
         }
 
         public GameState GetGameState()
@@ -154,8 +178,20 @@ namespace Windows_Forms_Chat
             for (int i = 0; i < 9; i++)
             {
                 grid[i] = TileType.blank;
+
                 if (buttons.Count >= 9)
-                    buttons[i].Text = TileTypeToString(TileType.blank);
+                {
+                    int index = i; // important for Invoke closure
+
+                    buttons[index].Invoke((Action)delegate
+                    {
+                        buttons[index].Text = "";
+
+                        // Restore original look
+                        buttons[index].BackColor = SystemColors.Control;
+                        buttons[index].ForeColor = Color.Black;
+                    });
+                }
             }
         }
 
@@ -167,6 +203,22 @@ namespace Windows_Forms_Chat
                 return "X";
             else
                 return "O";
+        }
+
+        public void HighlightAvailableTiles()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                if (buttons.Count >= 9 && grid[i] == TileType.blank)
+                {
+                    int index = i;
+
+                    buttons[index].Invoke((Action)delegate
+                    {
+                        buttons[index].BackColor = Color.Lavender;
+                    });
+                }
+            }
         }
     }
 }

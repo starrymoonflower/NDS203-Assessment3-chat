@@ -39,16 +39,19 @@
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(101, 50);
+            label1.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            label1.Location = new System.Drawing.Point(104, 50);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(60, 15);
+            label1.Size = new System.Drawing.Size(63, 14);
             label1.TabIndex = 0;
             label1.Text = "Username";
             label1.Click += label1_Click;
             // 
             // usernameTextBox
             // 
-            usernameTextBox.Location = new System.Drawing.Point(101, 68);
+            usernameTextBox.BackColor = System.Drawing.Color.White;
+            usernameTextBox.ForeColor = System.Drawing.SystemColors.WindowText;
+            usernameTextBox.Location = new System.Drawing.Point(104, 68);
             usernameTextBox.Name = "usernameTextBox";
             usernameTextBox.Size = new System.Drawing.Size(100, 23);
             usernameTextBox.TabIndex = 1;
@@ -56,14 +59,16 @@
             // label2
             // 
             label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             label2.Location = new System.Drawing.Point(104, 123);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(57, 15);
+            label2.Size = new System.Drawing.Size(63, 14);
             label2.TabIndex = 2;
             label2.Text = "Password";
             // 
             // passwordTextBox
             // 
+            passwordTextBox.BackColor = System.Drawing.Color.White;
             passwordTextBox.Location = new System.Drawing.Point(104, 141);
             passwordTextBox.Name = "passwordTextBox";
             passwordTextBox.Size = new System.Drawing.Size(100, 23);
@@ -72,7 +77,8 @@
             // 
             // loginButton
             // 
-            loginButton.Location = new System.Drawing.Point(104, 195);
+            loginButton.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            loginButton.Location = new System.Drawing.Point(115, 210);
             loginButton.Name = "loginButton";
             loginButton.Size = new System.Drawing.Size(75, 23);
             loginButton.TabIndex = 4;
@@ -82,7 +88,8 @@
             // 
             // registerButton
             // 
-            registerButton.Location = new System.Drawing.Point(104, 233);
+            registerButton.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            registerButton.Location = new System.Drawing.Point(115, 239);
             registerButton.Name = "registerButton";
             registerButton.Size = new System.Drawing.Size(75, 23);
             registerButton.TabIndex = 5;
@@ -94,7 +101,7 @@
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            ClientSize = new System.Drawing.Size(347, 302);
+            ClientSize = new System.Drawing.Size(314, 318);
             Controls.Add(registerButton);
             Controls.Add(loginButton);
             Controls.Add(passwordTextBox);

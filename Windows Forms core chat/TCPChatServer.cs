@@ -48,16 +48,16 @@ namespace Windows_Forms_Chat
             return tcp;
         }
 
-        
-
         //METHOD: 
         public void SetupServer()
         {
             DatabaseAccess.StartupDatabase();
+            
             //chatTextBox.Text += "Setting up server...\n";
             AddToChat("Setting up server...");
             serverSocket.Bind(new IPEndPoint(IPAddress.Any, port));
             serverSocket.Listen(0);
+            
             //kick off thread to read connecting clients, when one connects, it'll call out AcceptCallback function
             serverSocket.BeginAccept(AcceptCallback, this);
 
@@ -93,6 +93,7 @@ namespace Windows_Forms_Chat
             newClientSocket.socket = joiningSocket;
 
             clientSockets.Add(newClientSocket);
+            
             //start a thread to listen out for this new joining socket. Therefore there is a thread open for each client
             joiningSocket.BeginReceive(newClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, newClientSocket);
             AddToChat("Client connected, waiting for request...");
@@ -111,6 +112,10 @@ namespace Windows_Forms_Chat
 
             switch (command)
             {
+                case "!join":
+                    AddToChat(serverName + ": The server cannot join the Tic-Tac-Toe game. Please use a client.");
+                    return true;
+
                 case "!mod":
                     // Example !mod Bob
                     if (param.Length > 1)
@@ -471,6 +476,14 @@ namespace Windows_Forms_Chat
                     break;
 
                 case "!login":
+
+                    // Already logged in, can't login again
+                    if (currentClientSocket.state != ClientState.LOGIN)
+                    {
+                        SendString("You are already logged in. You can start chatting or use !join to start a game.", currentClientSocket);
+                        break;
+                    }
+
                     // Example: !login Bob password123
                     if (param.Length > 2)
                     {
@@ -506,7 +519,7 @@ namespace Windows_Forms_Chat
                         {
                             // Tell client login failed
                             byte[] failMsg = Encoding.ASCII.GetBytes(
-                                "Login failed. Incorrect username or password."
+                                "Invalid username or password. Please try again."
                             );
                             currentClientSocket.socket.Send(failMsg);
                         }
@@ -519,11 +532,10 @@ namespace Windows_Forms_Chat
                         );
                         currentClientSocket.socket.Send(failMsg);
                     }
-
                     break;
 
                 case "!register":
-                    // Example: !register Alice password123
+                    // Example: !register Bob password123
                     if (param.Length > 2)
                     {
                         // Get username and password from the command
@@ -569,14 +581,14 @@ namespace Windows_Forms_Chat
 
                         currentClientSocket.socket.Send(failMsg);
                     }
-
                     break;
 
                 case "!join":
+                   
                     // Is client in chatting state?
                     if (currentClientSocket.state != ClientState.CHATTING)
                     {
-                        byte[] data9 = Encoding.ASCII.GetBytes("Incorrect Client State");
+                        byte[] data9 = Encoding.ASCII.GetBytes("You must be logged in before joining the game.");
                         currentClientSocket.socket.Send(data9);
                         break;
                     }
@@ -617,6 +629,8 @@ namespace Windows_Forms_Chat
                         Task.Delay(200).ContinueWith(t => SendToAll("GAME START!! " + player1 + " (cross) vs. " + player2 + " (naught)", null));
                         Task.Delay(300).ContinueWith(t => SetPlayerTurn(currentTurn, currentClientSocket));
                     }
+                    
+
                     break;
 
                 case "!scores":
@@ -676,9 +690,9 @@ namespace Windows_Forms_Chat
                                     // Delay slightly so message order is clean across clients
                                     Task.Delay(50).ContinueWith(t =>
                                     {
-                                        SendToUsername(player1, "You've won!");
+                                        SendToUsername(player1, "Yayy! You've won!");
                                         SendToUsername(player2, "You've lost. " + player1 + " won the game.");
-                                        SendToAll("GAME END!! " + player1 + " (cross) wins!", null);
+                                        SendToAll("GAME END " + player1 + " (cross) wins!", null);
                                     });
                                    
 
@@ -692,9 +706,9 @@ namespace Windows_Forms_Chat
                                 {
                                     Task.Delay(50).ContinueWith(t =>
                                     {
-                                        SendToUsername(player2, "You've won!");
+                                        SendToUsername(player2, "Yayy! You've won!");
                                         SendToUsername(player1, "You've lost. " + player2 + " won the game.");
-                                        SendToAll("GAME END!! " + player2 + " (cross) wins!", null);
+                                        SendToAll("GAME END " + player2 + " (cross) wins!", null);
                                     });
                                    
                                     // Update database: Player 2 won, Player 1 lost
@@ -709,7 +723,7 @@ namespace Windows_Forms_Chat
                                     {
                                         SendToUsername(player1, "Game ended in a draw");
                                         SendToUsername(player2, "Game ended in a draw");
-                                        SendToAll("GAME END: Draw!! It's a draw!", null);
+                                        SendToAll("GAME END: It's a draw!", null);
                                     });
 
                                     // Update database: Both players get a draw
@@ -745,45 +759,26 @@ namespace Windows_Forms_Chat
                     break;
                 default:
 
-                    if (currentClientSocket.state != ClientState.CHATTING)
+                    // Not logged in
+                    if (currentClientSocket.state == ClientState.LOGIN)
                     {
                         SendString("Please login before chatting.", currentClientSocket);
-                        
+                        break;
                     }
-                    
+
+                    // Playing a game, can't chat
+                    if (currentClientSocket.state == ClientState.PLAYING)
+                    {
+                        SendString("You are currently in a game. Please finish the game before chatting.", currentClientSocket);
+                        break;
+                    }
+
                     // normal message broadcast out to all clients
-                    SendToAll(currentClientSocket.username + ": " + text, currentClientSocket);
+                    string chatmsg = currentClientSocket.username + ": " + text;
+
+                    SendToAll(chatmsg, null);
+                    AddToChat(chatmsg);
                     break;
-                    // If username not set yet show Unknown
-                    // otherwise use the client's actual username
-
-
-                    //// Prevent chatting until username has been accepted
-                    //if (currentClientSocket.usernameAccepted == false)
-                    //{
-                    //    byte[] failMsg = Encoding.ASCII.GetBytes("Please choose a valid username first using !username [name].");
-                    //    currentClientSocket.socket.Send(failMsg);
-                    //    break;
-                    //}
-
-                    //if (currentClientSocket.state != ClientState.CHATTING)
-                    //{
-                    //    byte[] failMsg = Encoding.ASCII.GetBytes("Please login or register before chatting.");
-                    //    currentClientSocket.socket.Send(failMsg);
-                    //    break;
-                    //}
-
-                    //// User the accepted username
-                    //string name = currentClientSocket.username;
-
-                    //string msg = name + ": " + text;
-
-                    //// Display the message on the server chat window too
-                    //AddToChat(msg);
-
-                    //// Send the message to all connected clients
-                    //SendToAll(msg, null);
-                    //break;
             }
 
             //we just received a message from this socket, better keep an ear out with another thread for the next one
@@ -926,7 +921,6 @@ namespace Windows_Forms_Chat
                     return true;
                 }
             }
-
             return false;
         }
 
@@ -982,7 +976,6 @@ namespace Windows_Forms_Chat
                     return c;
                 }
             }
-
             return null;
         }
 

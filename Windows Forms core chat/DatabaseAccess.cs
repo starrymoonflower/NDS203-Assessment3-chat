@@ -70,7 +70,7 @@ namespace Windows_Forms_Chat
             {  cnn.Open();
 
                 // SQL query to count matching users 
-                string sql = "SELECT COUNT(*) FROM Users WHERE Username = @username AND Password = @password;";
+                string sql = "SELECT COUNT(*) FROM Users WHERE LOWER(Username) = LOWER(@username) AND Password = @password";
 
                 SQLiteCommand cmd = new SQLiteCommand(sql, cnn);
 

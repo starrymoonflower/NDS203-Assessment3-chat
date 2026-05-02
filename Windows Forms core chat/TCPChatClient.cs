@@ -172,16 +172,33 @@ namespace Windows_Forms_Chat
                     AddToChat("Joined Tic-Tac-Toe as Player 1 (cross)");
                     ticTacToe.playerTileType = TileType.cross;
                     ticTacToe.playerName = "Player1";
+
+                    // Clear and reset board as soon as player joins
+                    ticTacToe.ResetBoard();
+
+                    // Player 1 will only be allowed to move when server sends !yourturn
+                    ticTacToe.myTurn = false;
+
                     break;
 
                 case "!player2":
                     AddToChat("Joined Tic-Tac-Toe as Player 2 (naught)");
                     ticTacToe.playerTileType = TileType.naught;
                     ticTacToe.playerName = "Player2";
+
+                    // Clear and reset board as soon as player joins
+                    ticTacToe.ResetBoard();
+
+                    // Player 2 must wait for Player 1 to move first
+                    ticTacToe.myTurn = false;
+
                     break;
                 case "!yourturn":
-                    AddToChat("It's your turn" + ticTacToe.playerName);
+                    AddToChat("It's your turn " + ticTacToe.playerName);
                     ticTacToe.myTurn = true;
+
+                    // Lets Player know its their turn visually
+                    ticTacToe.HighlightAvailableTiles();
                     break;
                 case "!otherturn":
                     AddToChat("It's the Opponent's turn");
@@ -232,11 +249,25 @@ namespace Windows_Forms_Chat
                             TextBox userBox = form.Controls["usernameTextBox"] as TextBox;
                             TextBox passBox = form.Controls["passwordTextBox"] as TextBox;
 
-                            if (userBox != null) userBox.Clear();
-                            if (passBox != null) passBox.Clear();
+                            if (userBox != null)
+                            {
+                                userBox.Clear();
+                                userBox.Focus();
+                            }
 
-                            // Put cursor back in username box
-                            userBox?.Focus();
+                            if (passBox != null)
+                            {
+                                passBox.Clear();
+                            }
+
+                            form.Activate();
+                            form.BringToFront();
+
+                            //if (userBox != null) userBox.Clear();
+                            //if (passBox != null) passBox.Clear();
+
+                            //// Put cursor back in username box
+                            //userBox?.Focus();
 
                             break;
                         }

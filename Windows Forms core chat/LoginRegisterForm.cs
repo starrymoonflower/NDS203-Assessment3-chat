@@ -41,7 +41,6 @@ namespace Windows_Forms_Chat
                 return;
             }
 
-
             client.pendingUsername = username;
             client.SendString("!login " + username + " " + password);
         }
@@ -56,7 +55,6 @@ namespace Windows_Forms_Chat
                 MessageBox.Show("Please enter username and password");
                 return;
             }
-
 
             client.pendingUsername = username;
             client.SendString("!register " + username + " " + password);

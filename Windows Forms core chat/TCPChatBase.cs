@@ -54,6 +54,10 @@ namespace Windows_Forms_Chat
                 }
 
                 chatTextBox.AppendText(Environment.NewLine);
+
+                chatTextBox.SelectionStart = chatTextBox.Text.Length;
+                chatTextBox.ScrollToCaret();
+
             });
         }
     }
