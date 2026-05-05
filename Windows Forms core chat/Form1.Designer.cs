@@ -50,6 +50,8 @@
             button7 = new System.Windows.Forms.Button();
             button8 = new System.Windows.Forms.Button();
             button9 = new System.Windows.Forms.Button();
+            usernameTextbox = new System.Windows.Forms.TextBox();
+            usernameLabel = new System.Windows.Forms.Label();
             SuspendLayout();
             // 
             // label1
@@ -137,7 +139,7 @@
             // 
             // HostButton
             // 
-            HostButton.Location = new System.Drawing.Point(11, 68);
+            HostButton.Location = new System.Drawing.Point(11, 73);
             HostButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             HostButton.Name = "HostButton";
             HostButton.Size = new System.Drawing.Size(82, 22);
@@ -148,7 +150,7 @@
             // 
             // JoinButton
             // 
-            JoinButton.Location = new System.Drawing.Point(220, 68);
+            JoinButton.Location = new System.Drawing.Point(220, 73);
             JoinButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             JoinButton.Name = "JoinButton";
             JoinButton.Size = new System.Drawing.Size(82, 22);
@@ -285,6 +287,24 @@
             button9.UseVisualStyleBackColor = false;
             button9.Click += button9_Click;
             // 
+            // usernameTextbox
+            // 
+            usernameTextbox.Location = new System.Drawing.Point(370, 73);
+            usernameTextbox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            usernameTextbox.Name = "usernameTextbox";
+            usernameTextbox.Size = new System.Drawing.Size(140, 23);
+            usernameTextbox.TabIndex = 5;
+            // 
+            // usernameLabel
+            // 
+            usernameLabel.AutoSize = true;
+            usernameLabel.Location = new System.Drawing.Point(370, 56);
+            usernameLabel.Name = "usernameLabel";
+            usernameLabel.Size = new System.Drawing.Size(60, 15);
+            usernameLabel.TabIndex = 4;
+            usernameLabel.Text = "Username";
+            usernameLabel.Click += label6_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -306,7 +326,9 @@
             Controls.Add(label4);
             Controls.Add(TypeTextBox);
             Controls.Add(ChatTextBox);
+            Controls.Add(usernameTextbox);
             Controls.Add(ServerIPTextBox);
+            Controls.Add(usernameLabel);
             Controls.Add(label3);
             Controls.Add(serverPortTextBox);
             Controls.Add(label2);
@@ -345,6 +367,8 @@
         private System.Windows.Forms.Button button7;
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.TextBox usernameTextbox;
+        private System.Windows.Forms.Label usernameLabel;
     }
 }
 

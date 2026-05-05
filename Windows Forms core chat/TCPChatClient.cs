@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
+using System.Diagnostics.Eventing.Reader;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Data.SQLite;
-
 using System.Windows.Forms;
 
 //reference: https://github.com/AbleOpus/NetworkingSamples/blob/master/MultiClient/Program.cs
@@ -23,9 +24,6 @@ namespace Windows_Forms_Chat
 
         // track if client is intentionally exiting
         public bool isExiting = false;
-
-        //// store username before server accepts
-        //public string pendingUsername = "";
 
         // track username on client
         public string pendingUsername;
@@ -194,7 +192,7 @@ namespace Windows_Forms_Chat
 
                     break;
                 case "!yourturn":
-                    AddToChat("It's your turn " + ticTacToe.playerName);
+                    AddToChat("It's your turn, " + ticTacToe.playerName + "!");
                     ticTacToe.myTurn = true;
 
                     // Lets Player know its their turn visually
@@ -233,26 +231,40 @@ namespace Windows_Forms_Chat
                 CloseLoginForm();
             }
 
-            // Detect successful registration
+            // Detect successful registration from server
             if (text.StartsWith("Registration successful"))
             {
-                // Keep the form open so the user can now press Login
-                MessageBox.Show("Registration successful. Please login with your username and password.");
+                // Keep the login/register form open so the user can proceed to login
 
-                chatTextBox.Invoke((Action)delegate
+                chatTextBox.BeginInvoke((Action)delegate
                 {
+                    // Loop through open forms to find the login/register form
                     foreach (Form form in Application.OpenForms)
                     {
                         if (form.Name == "LoginRegisterForm")
                         {
-                            // Clear the textboxes
-                            TextBox userBox = form.Controls["usernameTextBox"] as TextBox;
-                            TextBox passBox = form.Controls["passwordTextBox"] as TextBox;
+                            // Show confirmation message owned by login form so it stays in front
+                            MessageBox.Show(
+                                form,
+                                "Registration successful. Please login with your username and password.",
+                                "Registration Successful",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.None
+                            );
 
+                            // Bring login form to front after message closes
+                            form.WindowState = FormWindowState.Normal;
+                            form.Activate();
+                            form.BringToFront();
+
+                            // Get reference to username and password textboxes
+                            TextBox userBox = form.Controls.Find("usernameTextBox", true).FirstOrDefault() as TextBox;
+                            TextBox passBox = form.Controls.Find("passwordTextBox", true).FirstOrDefault() as TextBox;
+
+                            // Clear username and password fields after registration
                             if (userBox != null)
                             {
                                 userBox.Clear();
-                                userBox.Focus();
                             }
 
                             if (passBox != null)
@@ -260,14 +272,8 @@ namespace Windows_Forms_Chat
                                 passBox.Clear();
                             }
 
-                            form.Activate();
-                            form.BringToFront();
-
-                            //if (userBox != null) userBox.Clear();
-                            //if (passBox != null) passBox.Clear();
-
-                            //// Put cursor back in username box
-                            //userBox?.Focus();
+                            // Set Cursor back to username field for next input
+                            userBox?.Focus();
 
                             break;
                         }
@@ -276,36 +282,8 @@ namespace Windows_Forms_Chat
             
             }
 
-
-
-
-
-            //// Detect login/register success
-            //if (text.StartsWith("Login successful") || text.StartsWith("Registration successful"))
-            //{
-            //    // Extract username (we already sent it from popup)
-            //    chatTextBox.Invoke((Action)delegate
-            //    {
-            //        Form parentForm = chatTextBox.FindForm();
-
-            //        if (parentForm != null)
-            //        {
-            //            parentForm.Text = "Client: " + pendingUsername;
-            //        }
-            //    });
-
-            //    // Close login popup
-            //    CloseLoginForm();
-            //}
-            //if (text.StartsWith("Registration successful"))
-            //{
-            //    MessageBox.Show("Registration successful. Please login w ur username and password.");
-            //}
-
-
-            //text is from server but could have been broadcast from the other clients
-            //AddToChat( text );
-
+            // After receiving any message, return focus to the main input textbox 
+            // so user can continue typing without clicking manually
             chatTextBox.Invoke((Action)delegate
             {
                 Form parentForm = chatTextBox.FindForm();
@@ -320,6 +298,8 @@ namespace Windows_Forms_Chat
                 }
             });
 
+            // Detect when server confirms username has been accepted 
+            // Update the main window title to reflect the logged-in user
             if (text.StartsWith("Username accepted"))
             {
                 chatTextBox.Invoke((Action)delegate
@@ -333,9 +313,66 @@ namespace Windows_Forms_Chat
                 });
             }
 
-            if (text.StartsWith("Login failed") || text.StartsWith("Registration failed"))
+            // Handle login failure or invalid 
+            // Bring login/register form to front and prompt user to retry
+            if (text.StartsWith("Login failed") || text.StartsWith("Invalid username or password"))
             {
-                MessageBox.Show(text);
+                chatTextBox.BeginInvoke((Action)delegate
+                {
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.Name == "LoginRegisterForm")
+                        {
+                            // Show error message attached to login form
+                            MessageBox.Show(
+                                form,
+                                text,
+                                "Login Failed",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.None
+                            );
+
+                            // Bring login form back to front for retry
+                            form.WindowState = FormWindowState.Normal;
+                            form.Activate();
+                            form.BringToFront();
+
+                            // Clear password field and focus for re-entry
+                            TextBox passBox = form.Controls.Find("passwordTextBox", true).FirstOrDefault() as TextBox;
+
+                            if (passBox != null)
+                            {
+                                passBox.Clear();
+                                passBox.Focus();
+                            }
+                            break;
+                        }
+                    }
+                });
+            }
+            else if (text.StartsWith("Registration failed"))
+            {
+                chatTextBox.BeginInvoke((Action)delegate
+                {
+                    foreach (Form form in Application.OpenForms)
+                    {
+                        if (form.Name == "LoginRegisterForm")
+                        {
+                            MessageBox.Show(
+                                form,
+                                text,
+                                "Registration Failed",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.None
+                            );
+
+                            form.Activate();
+                            form.BringToFront();
+
+                            break;
+                        }
+                    }
+                });
             }
 
             if (text.Contains("You have been kicked"))
@@ -347,10 +384,7 @@ namespace Windows_Forms_Chat
             //we just received a message from this socket, better keep an ear out with another thread for the next one
             currentClientSocket.socket.BeginReceive(currentClientSocket.buffer, 0, ClientSocket.BUFFER_SIZE, SocketFlags.None, ReceiveCallback, currentClientSocket);
         }
-        //public void Close()
-        //{
-        //    socket.Close();
-        //}
+       
 
         // Close popup method
         private void CloseLoginForm()

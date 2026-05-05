@@ -25,10 +25,16 @@ namespace Windows_Forms_Chat
 
         private void LoginRegisterForm_Load(object sender, EventArgs e)
         {
-
+            if (!string.IsNullOrWhiteSpace(prefilledUsername))
+            {
+                usernameTextBox.Text = prefilledUsername;
+                passwordTextBox.Focus();
+            }
         }
 
         public TCPChatClient client;
+
+        public string prefilledUsername = "";
 
         private void loginButton_Click(object sender, EventArgs e)
         {

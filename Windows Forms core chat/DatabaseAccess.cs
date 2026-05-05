@@ -152,16 +152,6 @@ namespace Windows_Forms_Chat
                     );
                 }
 
-                //string result = "Scores:\n";
-
-                //// Loop through all rows
-                //while (reader.Read())
-                //{
-                //    result += reader["Username"] + " - Wins: " + reader["Wins"] +
-                //              ", Losses: " + reader["Losses"] +
-                //              ", Draws: " + reader["Draws"] + "\n";
-                //}
-
                 return result;
             }
         }
@@ -207,35 +197,3 @@ namespace Windows_Forms_Chat
 
 
 
-    
-            //bool userExists = false;
-
-            // Connect to Database
-            // Use SQL to query if User Table has (username, password)
-            // If it does, return true
-
-//            return (userExists);
-//        }
-
-//        public static void AddUser(string username, string password)
-//        {
-//            // Add username and password to database
-//        }
-
-//        public static void RemoveUser(string username)
-//        {
-
-//        }
-
-//        public static void ChangeUsername(string old_username, string new_username)
-//        {
-            
-//        }
-
-//        public static void UserWon(string username)
-//        {
-//            // 1. Open Database
-//            // 2. Increment Wins of Username
-//        }
-//    }
-//}

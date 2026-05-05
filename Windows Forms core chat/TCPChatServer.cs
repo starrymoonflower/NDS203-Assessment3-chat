@@ -134,7 +134,7 @@ namespace Windows_Forms_Chat
                                 // Check if user is now a moderator
                                 if (c.moderator == true)
                                 {
-                                    // client promoted (message for everyone)
+                                    // Client promoted (message for everyone)
                                     string msg = serverName + ": " + c.username + " has been promoted to Moderator.";
 
                                     AddToChat(msg);
@@ -156,7 +156,7 @@ namespace Windows_Forms_Chat
                                     // Send to all except this user
                                     SendToAll(msg, c);
 
-                                    // personalised message for the target user
+                                    // Personalised message for the target user
                                     byte[] data = Encoding.ASCII.GetBytes(serverName + ": You have been demoted from Moderator.");
                                     c.socket.Send(data);
                                 }
@@ -251,7 +251,6 @@ namespace Windows_Forms_Chat
             Array.Copy(currentClientSocket.buffer, recBuf, received);
             string text = Encoding.ASCII.GetString(recBuf);
 
-            //AddToChat(currentClientSocket.username + ": " + text);
             if (!text.StartsWith("!login") && !text.StartsWith("!register"))
             {
                 string displayName = string.IsNullOrWhiteSpace(currentClientSocket.username)
@@ -388,9 +387,6 @@ namespace Windows_Forms_Chat
                     AddToChat(msg);
                     SendToAll(msg, null);
 
-                    //AddToChat(serverName + ": " + exitingUser + " has left the chat.");
-                    //SendToAll(serverName + ": " + exitingUser + " has left the chat.", null);
-
                     return;
 
                 // Sends a private message to a specified user
@@ -503,7 +499,6 @@ namespace Windows_Forms_Chat
                             currentClientSocket.usernameAccepted = true;
 
                             // Change server-side state and notify client
-                            // CurrentClientSocket.state = ClientState.CHATTING;
                             UpdateClientState(currentClientSocket, ClientState.CHATTING);
 
                             // Tell client login worked
@@ -547,17 +542,12 @@ namespace Windows_Forms_Chat
 
                         if (registered)
                         {
-                            //// Tell client registration worked
-                            //byte[] successMsg = Encoding.ASCII.GetBytes(
-                            //    "Registration successful. You can now login using !login [username] [password]."
-                            //);
-
+                            // Tell client registration worked
                             byte[] successMsg = Encoding.ASCII.GetBytes(
                             "Registration successful. Please login with your username and password."
                             );
 
                             currentClientSocket.socket.Send(successMsg);
-
 
                             // Show registration on server window
                             AddToChat("New user registered: " + username);
@@ -629,8 +619,6 @@ namespace Windows_Forms_Chat
                         Task.Delay(200).ContinueWith(t => SendToAll("GAME START!! " + player1 + " (cross) vs. " + player2 + " (naught)", null));
                         Task.Delay(300).ContinueWith(t => SetPlayerTurn(currentTurn, currentClientSocket));
                     }
-                    
-
                     break;
 
                 case "!scores":
@@ -642,7 +630,12 @@ namespace Windows_Forms_Chat
                 case "!move":
                     if (param.Length == 2)
                     {
-                        int tile = int.Parse(param[1]);
+                        if (!int.TryParse(param[1], out int tile))
+                        {
+                            SendString("Invalid move. Please enter a number between 0 and 8.", currentClientSocket);
+                            break;
+                        }
+
                         TileType type = TileType.blank;
                         if (currentClientSocket.username.Equals(player1))
                         {
@@ -657,8 +650,10 @@ namespace Windows_Forms_Chat
                         else
                         {
                             // If client attempting move is not player, abort
+                            SendString("You are not part of the current game.", currentClientSocket);
                             break;
                         }
+
                         bool validmove = ticTacToe.SetTile(tile, type);
                         if (validmove)
                         {
@@ -708,7 +703,7 @@ namespace Windows_Forms_Chat
                                     {
                                         SendToUsername(player2, "Yayy! You've won!");
                                         SendToUsername(player1, "You've lost. " + player2 + " won the game.");
-                                        SendToAll("GAME END " + player2 + " (cross) wins!", null);
+                                        SendToAll("GAME END " + player2 + " (naught) wins!", null);
                                     });
                                    
                                     // Update database: Player 2 won, Player 1 lost
@@ -740,7 +735,6 @@ namespace Windows_Forms_Chat
                                 // TODO: Update Database with scores
                                 //DatabaseAccess.UserWon(player1);
                             }
-
                         }
                         else
                         {
@@ -800,7 +794,6 @@ namespace Windows_Forms_Chat
         }
 
         public void SendToAll(string str, ClientSocket from)
-
         {
             foreach (ClientSocket c in clientSockets)
             {

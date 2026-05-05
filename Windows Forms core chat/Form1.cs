@@ -59,7 +59,15 @@ namespace Windows_Forms_Chat
                         throw new Exception("Incorrect port value!");
 
                     // Set window title for server
-                    this.Text = "Server";
+                    string name = usernameTextbox.Text.Trim();
+
+                    if (string.IsNullOrWhiteSpace(name))
+                    {
+                        name = "Server";
+                    }
+
+                    server.serverName = name;
+                    this.Text = "Server: " + server.serverName;
 
                     // Start the server (begin listening for client connections)
                     server.SetupServer();
@@ -81,12 +89,12 @@ namespace Windows_Forms_Chat
                     ChatTextBox.AppendText(Environment.NewLine);
                 }
             }
-
         }
 
         // METHOD: CLIENT JOINS THE CHAT SERVER
         private void JoinButton_Click(object sender, EventArgs e)
         {
+            
             if (CanHostOrJoin())
             {
                 try
@@ -105,9 +113,30 @@ namespace Windows_Forms_Chat
                     client.ConnectToServer();
 
                     // Open login/register popup
+                    string username = usernameTextbox.Text.Trim();
+
+                    if (string.IsNullOrWhiteSpace(username))
+                    {
+                        MessageBox.Show("Please enter a username first.");
+                        return;
+                    }
+
                     LoginRegisterForm loginForm = new LoginRegisterForm();
                     loginForm.client = client;
+                    loginForm.prefilledUsername = username;
+
+                    loginForm.FormClosed += (s, args) =>
+                    {
+                        if (client != null && client.myState == ClientState.LOGIN)
+                        {
+                            client.Close();
+                            client = null;
+                        }
+                    };
+
                     loginForm.Show();
+
+                    
                 }
                 catch (Exception ex)
                 {
@@ -117,7 +146,7 @@ namespace Windows_Forms_Chat
                 }
             }
         }
-        
+
 
         // METHOD: SERVER SENDS A MESSAGE
         private void SendButton_Click(object sender, EventArgs e)
@@ -181,8 +210,22 @@ namespace Windows_Forms_Chat
                 return;
             }
 
+            // If client is not in PLAYING state, don't allow tile clicks
+            if (client == null || client.myState != ClientState.PLAYING)
+            {
+                ChatTextBox.AppendText("Please type !join to start a new game." + Environment.NewLine);
+
+                // Disable all tiles so user can't keep clicking
+                foreach (Button b in ticTacToe.buttons)
+                {
+                    b.Enabled = false;
+                }
+                return;
+            }
+
+            // Only allow move when it is this player's turn
             if (ticTacToe.myTurn)
-            {   
+            {
                 client.SendMoveAttemptToServer(i);
                 ticTacToe.myTurn = false;
             }
@@ -260,5 +303,9 @@ namespace Windows_Forms_Chat
 
         }
 
+        private void label6_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }
